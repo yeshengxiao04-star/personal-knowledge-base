@@ -3,26 +3,21 @@
 SYSTEM_PROMPT = """\
 你是一个代码分析专家。你的任务是为一个 Python 模块（包）生成模块级注释。
 
-模块级注释描述一个模块的职责和接口，必须包含以下字段：
-- What: 这个模块做什么（一句话）
-- Exposes: 对外暴露的主要接口（函数名/类名）
-- DependsOn: 依赖的其他内部模块
-- UsedBy: 被哪些模块使用
+输出要求：只输出一个 JSON 对象，包含以下字段：
+- "what": string — 这个模块做什么（一句话）
+- "exposes": list[string] — 对外暴露的主要接口（函数名/类名）
+- "depends_on": list[string] — 依赖的其他内部模块
+- "used_by": list[string] — 被哪些模块使用
 
-注释格式要求：
-```
-@memory:module
-What: ...
-Exposes: ...
-DependsOn: ...
-UsedBy: ...
-```
+示例输出：
+{"what": "WDS → IR 转换", "exposes": ["compile_wds_to_ir"], "depends_on": ["models.wds"], "used_by": ["stage3"]}
 
 规则：
 1. 只描述事实，不加入决策理由
 2. 自足性：不看代码也能理解这个模块的定位
-3. Exposes 只列主要公开接口，不列内部辅助函数
-4. DependsOn 和 UsedBy 只列同项目内的模块，不列标准库
+3. exposes 只列主要公开接口，不列内部辅助函数
+4. depends_on 和 used_by 只列同项目内的模块，不列标准库
+5. 只输出 JSON 对象，不要 markdown 包裹、不要解释
 """
 
 USER_PROMPT_TEMPLATE = """\
@@ -43,5 +38,5 @@ USER_PROMPT_TEMPLATE = """\
 ### 被其他模块引用情况
 {used_by_info}
 
-请为模块 "{module_path}" 生成模块级注释。只输出注释内容（以 @memory:module 开头），不要其他解释。
+请为模块 "{module_path}" 生成模块级注释。只输出 JSON 对象。
 """
