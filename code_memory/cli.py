@@ -26,12 +26,14 @@ def main():
     init_parser.add_argument("project_path", type=Path, help="项目根目录路径")
     init_parser.add_argument("--config", type=Path, help="配置文件路径 (config.yaml)")
     init_parser.add_argument("--output", type=Path, help="记忆库输出目录（默认旁挂）")
-    init_parser.add_argument("--step", choices=["scan", "annotate", "write", "extract", "all"],
-                            default="all", help="只执行指定步骤")
+    init_parser.add_argument(
+        "--step", choices=["scan", "annotate", "index", "all"],
+        default="all", help="只执行指定步骤",
+    )
     init_parser.add_argument("--no-llm", action="store_true", help="跳过 LLM 注释，只做静态分析")
-    init_parser.add_argument("--dry-run", action="store_true", help="不写回文件，只输出注释清单")
+    init_parser.add_argument("--dry-run", action="store_true", help="不建索引，只输出注释")
 
-    # scan 子命令（便捷方式，等同 init --step scan）
+    # scan 子命令（便捷方式）
     scan_parser = subparsers.add_parser("scan", help="仅执行静态分析，输出骨架文件")
     scan_parser.add_argument("project_path", type=Path, help="项目根目录路径")
     scan_parser.add_argument("--config", type=Path, help="配置文件路径")
@@ -39,7 +41,6 @@ def main():
 
     args = parser.parse_args()
 
-    # 配置日志
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(levelname)s: %(message)s",
@@ -63,7 +64,6 @@ def _run_scan(args):
 
     skeleton = scan_project(config)
 
-    # 输出
     output_path = args.output or _default_memory_dir(args.project_path) / "skeleton.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
@@ -96,12 +96,10 @@ def _run_init(args):
         )
         logging.info(f"  Skeleton: {skeleton.stats}")
     else:
-        # 从已有骨架加载
         skeleton_path = memory_dir / "skeleton.json"
         if not skeleton_path.exists():
             logging.error("skeleton.json not found. Run scan first.")
             sys.exit(1)
-        from .models import Skeleton
         skeleton = _load_skeleton(skeleton_path)
 
     if args.no_llm or step == "scan":
@@ -112,41 +110,37 @@ def _run_init(args):
     if step in ("annotate", "all"):
         logging.info("Step 2: LLM annotation generation...")
         from .init.annotator import generate_annotations
-        plan = generate_annotations(skeleton, config)
-        plan_path = memory_dir / "annotation_plan.json"
-        plan_path.write_text(
-            json.dumps(asdict(plan), ensure_ascii=False, indent=2),
+
+        # 加载已有注释（用于 overwrite_existing 检查）
+        annotations_path = memory_dir / "annotations.json"
+        existing = _load_annotations(annotations_path) if annotations_path.exists() else None
+
+        annotations = generate_annotations(skeleton, config, existing=existing)
+        annotations_path.write_text(
+            json.dumps(_annotation_store_to_dict(annotations), ensure_ascii=False, indent=2),
             encoding="utf-8",
         )
-        logging.info(f"  Plan: {plan.stats}")
+        logging.info(f"  Annotations: {annotations.stats}")
     else:
-        plan_path = memory_dir / "annotation_plan.json"
-        if not plan_path.exists():
-            logging.error("annotation_plan.json not found. Run annotate first.")
+        annotations_path = memory_dir / "annotations.json"
+        if not annotations_path.exists():
+            logging.error("annotations.json not found. Run annotate first.")
             sys.exit(1)
-        plan = _load_plan(plan_path)
+        annotations = _load_annotations(annotations_path)
 
     if args.dry_run or step == "annotate":
         logging.info("Done (--dry-run or --step annotate)")
         return
 
-    # Step 3a: 写回
-    if step in ("write", "all"):
-        logging.info("Step 3a: Writing annotations back to source files...")
-        from .init.writer import write_annotations
-        write_stats = write_annotations(plan, Path(config.project_root))
-        logging.info(f"  Write stats: {write_stats}")
+    # Step 3: 构建索引
+    if step in ("index", "all"):
+        logging.info("Step 3: Building index...")
+        from .init.indexer import build_index
 
-    # Step 3b: 提取索引
-    if step in ("extract", "all"):
-        logging.info("Step 3b: Extracting index from annotated code...")
-        from .init.extractor import extract_index
-        index = extract_index(config)
+        index = build_index(skeleton, annotations)
 
-        # 写出索引文件
         shallow_dir = memory_dir / "shallow"
         shallow_dir.mkdir(exist_ok=True)
-
         _write_index_files(index, shallow_dir)
         logging.info(f"  Index: {index.stats}")
 
@@ -163,9 +157,7 @@ def _load_config(args) -> ProjectConfig:
     else:
         config = ProjectConfig.default_for_project(project_path)
 
-    # 自动检测 source_dirs
     if config.source_dirs == ["src"]:
-        # 检查常见目录结构
         for candidate in ["src", "lib", project_path.name]:
             if (project_path / candidate).is_dir():
                 config.source_dirs = [candidate]
@@ -182,9 +174,11 @@ def _default_memory_dir(project_path: Path) -> Path:
 
 
 def _load_skeleton(path: Path):
-    """从 JSON 加载 Skeleton。简化版，不做完整反序列化。"""
-    import json
-    from .models import Skeleton, FileInfo, PackageInfo, FunctionInfo, ClassInfo, ParameterInfo, BlockKind
+    """从 JSON 加载 Skeleton。"""
+    from .models import (
+        Skeleton, FileInfo, PackageInfo, FunctionInfo, ClassInfo,
+        ParameterInfo, BlockKind,
+    )
 
     data = json.loads(path.read_text(encoding="utf-8"))
 
@@ -193,15 +187,17 @@ def _load_skeleton(path: Path):
         functions = []
         for fn in fd.get("functions", []):
             params = [ParameterInfo(**p) for p in fn.get("parameters", [])]
-            fn_obj = FunctionInfo(
+            functions.append(FunctionInfo(
                 name=fn["name"], qualified_name=fn["qualified_name"],
                 kind=BlockKind(fn["kind"]), line_start=fn["line_start"],
                 line_end=fn["line_end"], parameters=params,
                 return_annotation=fn.get("return_annotation"),
                 docstring=fn.get("docstring"), decorators=fn.get("decorators", []),
                 calls=fn.get("calls", []),
-            )
-            functions.append(fn_obj)
+                signature_hash=fn.get("signature_hash", ""),
+                body_hash=fn.get("body_hash", ""),
+                call_hash=fn.get("call_hash", ""),
+            ))
 
         classes = []
         for cd in fd.get("classes", []):
@@ -215,12 +211,18 @@ def _load_skeleton(path: Path):
                     return_annotation=m.get("return_annotation"),
                     docstring=m.get("docstring"), decorators=m.get("decorators", []),
                     calls=m.get("calls", []),
+                    signature_hash=m.get("signature_hash", ""),
+                    body_hash=m.get("body_hash", ""),
+                    call_hash=m.get("call_hash", ""),
                 ))
             classes.append(ClassInfo(
                 name=cd["name"], qualified_name=cd["qualified_name"],
                 line_start=cd["line_start"], line_end=cd["line_end"],
                 docstring=cd.get("docstring"), bases=cd.get("bases", []),
                 methods=methods, decorators=cd.get("decorators", []),
+                signature_hash=cd.get("signature_hash", ""),
+                body_hash=cd.get("body_hash", ""),
+                call_hash=cd.get("call_hash", ""),
             ))
 
         files.append(FileInfo(
@@ -243,21 +245,19 @@ def _load_skeleton(path: Path):
     )
 
 
-def _load_plan(path: Path):
-    """从 JSON 加载 AnnotationPlan。"""
-    import json
-    from .models import AnnotationPlan, AnnotationEntry, AnnotationLevel
+def _load_annotations(path: Path):
+    """从 JSON 加载 AnnotationStore。"""
+    from .models import AnnotationStore, AnnotationEntry, AnnotationLevel
 
     data = json.loads(path.read_text(encoding="utf-8"))
-    entries = [
-        AnnotationEntry(
-            file_path=e["file_path"], target_name=e["target_name"],
-            level=AnnotationLevel(e["level"]), content=e["content"],
-            action=e.get("action", "insert"), line_hint=e.get("line_hint"),
+    entries = {}
+    for qname, ed in data.get("entries", {}).items():
+        entries[qname] = AnnotationEntry(
+            qualified_name=qname,
+            level=AnnotationLevel(ed["level"]),
+            annotation=ed["annotation"],
         )
-        for e in data.get("entries", [])
-    ]
-    return AnnotationPlan(
+    return AnnotationStore(
         project_name=data["project_name"],
         generation_time=data["generation_time"],
         model_used=data["model_used"],
@@ -267,28 +267,41 @@ def _load_plan(path: Path):
     )
 
 
+def _annotation_store_to_dict(store) -> dict:
+    """将 AnnotationStore 序列化为可 JSON 化的 dict。"""
+    return {
+        "project_name": store.project_name,
+        "generation_time": store.generation_time,
+        "model_used": store.model_used,
+        "entries": {
+            qname: {
+                "level": entry.level.value,
+                "annotation": entry.annotation,
+            }
+            for qname, entry in store.entries.items()
+        },
+        "skipped": store.skipped,
+        "stats": store.stats,
+    }
+
+
 def _write_index_files(index, shallow_dir: Path):
     """将索引写入文件。"""
     from dataclasses import asdict
 
-    system_path = shallow_dir / "system.json"
-    modules_path = shallow_dir / "modules.json"
-    blocks_path = shallow_dir / "blocks.json"
-    call_graph_path = shallow_dir / "call_graph.json"
-
-    system_path.write_text(
+    (shallow_dir / "system.json").write_text(
         json.dumps([asdict(e) for e in index.system_entries], ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    modules_path.write_text(
+    (shallow_dir / "modules.json").write_text(
         json.dumps([asdict(e) for e in index.module_entries], ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    blocks_path.write_text(
+    (shallow_dir / "blocks.json").write_text(
         json.dumps([asdict(e) for e in index.block_entries], ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    call_graph_path.write_text(
+    (shallow_dir / "call_graph.json").write_text(
         json.dumps(index.call_graph, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
