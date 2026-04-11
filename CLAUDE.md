@@ -1,0 +1,96 @@
+# 个人知识库 — 项目文档
+
+## 项目定位
+
+三维标签驱动的个人知识 RAG 系统。双重身份：
+1. **独立产品**：基于 Obsidian + Python 的个人知识管理与检索系统
+2. **实验田**：为 AI 记忆涌现模型提供 ground truth，验证 HDBSCAN 能否自动复现人工标签分类
+
+源自对群友个人知识库系统（2342 条笔记、Python 全栈自建）的截图逆向分析。
+
+## 架构
+
+```
+Obsidian层（零代码，日常使用）
+  · Templater — 交互式笔记模板（五段式 + XYZ标签弹窗选择）
+  · Dataview — 标签统计仪表盘、切面查询
+  · Graph View — 知识图谱浏览
+  · obsidian-git — 版本控制
+─────────────────────────────
+Python层（检索与生成，Phase 2+ 开始）
+  · python-frontmatter — 解析 .md + YAML
+  · Embedding → 向量存储 → 标签预筛选 → 向量召回 → Rerank → LLM
+  · Thread Dossier Builder（Phase 5）
+─────────────────────────────
+两层通过文件系统共享 vault 目录，无同步机制
+```
+
+## XYZ 三轴标签体系
+
+- **X轴（主题领域）**：AI/Memory · AI/Collaboration · AI/Engineering · AI/Industry · Cognition · Career · Writing
+- **Y轴（认知功能）**：Architecture · Decision · Mechanism · Model · Optimization · Protocol · Reference · Troubleshooting
+- **Z轴（拓扑角色）**：Boundary · Node · Matrix · Pipeline
+
+标签格式：`x/AI/Memory`、`y/Mechanism`、`z/Node`，写在 YAML frontmatter 的 tags 字段中。Obsidian 原生支持层级标签展开。
+
+## 关键路径与文件
+
+| 路径 | 说明 |
+|------|------|
+| `/Users/mac/Documents/JXD&AI/` | 实际 Obsidian vault（118 篇笔记） |
+| `群友知识库体系_工程复现参考.md` | 原系统逆向分析（截图级别） |
+| `知识库结构化整理方案.md` | 双层涌现标签体系设计 + Pipeline 规划 |
+| `vault分析报告.md` | TF-IDF 聚类分析结果（107 篇、10 个簇） |
+| `代码项目记忆系统方案.md` | 衍生概念：将记忆体系迁移到代码项目管理 |
+
+## 实施阶段
+
+| Phase | 内容 | 状态 |
+|-------|------|------|
+| 1 | Obsidian vault 结构化改造（标签表、模板、仪表盘、测试笔记） | ✅ 完成 |
+| 2a | Vault TF-IDF 分析 → 涌现标签候选池 + 聚类报告 | ✅ 完成 |
+| 2b | Pipeline 工程化（Python 脚本：扫描→分析→写回 frontmatter） | 🔲 待开始 |
+| 2c | 批量改造（存量笔记补 frontmatter + 标签 + 双链） | 🔲 待开始 |
+| 3 | Rerank + LLM 生成管线 | 🔲 待开始 |
+| 4 | 知识图谱可视化增强 | 🔲 待开始 |
+| 5 | Thread Dossier Builder | 🔲 待开始 |
+
+## 核心设计决策
+
+### 双层涌现标签（知识库结构化整理方案）
+
+在 XYZ 三轴之上新增两个维度：
+- **`emergent_tags`**（第四维）：TF-IDF + HDBSCAN 无监督聚类，数据驱动的语义标签
+- **`anchor_tags`**（第五维）：预定义质心概念 + Embedding 距离，认知框架牵引标签
+
+质心概念池（目前仅一个）：`不隔`（王国维《人间词话》，审美偏好锚点）
+
+### 存量笔记处理原则
+
+- Frontmatter 是纯索引层，不动原文内容
+- 双链增量插入，不破坏原有结构
+- 五段式模板只用于新笔记，不强行套用存量
+
+### TF-IDF 分析关键发现
+
+- 107 篇笔记聚为 10 个簇，与 X 轴标签体系大体吻合
+- `x/AI/Collaboration` 与 `x/Cognition` 在语义上高度耦合（协作校准文档含大量认知特质描述）
+- `x/Writing` 内部可能需要子标签（Poetry / Essay / Literary-Criticism）
+- 标签覆盖率约 20%，大量存量笔记尚未标注
+
+## 技术栈
+
+| 层 | 组件 | 选型 |
+|----|------|------|
+| Obsidian | 模板 | Templater |
+| Obsidian | 查询 | Dataview |
+| Python | 文件解析 | python-frontmatter |
+| Python | Embedding | 待定（text-embedding-3 / BGE / GTE） |
+| Python | 向量存储 | 待定（Chroma / Qdrant / FAISS） |
+| Python | Rerank | 初期余弦排序，后期 cross-encoder |
+| Python | LLM | Claude API |
+
+## 关联项目
+
+- **AI 记忆工程**：记忆系统的分层涌现模型（本项目为其提供人工标签 ground truth）
+- **代码项目记忆系统**：将同一套记忆体系迁移到代码工程领域的概念方案（尚未实施）
