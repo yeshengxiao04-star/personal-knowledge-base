@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import ast
 import fnmatch
+import hashlib
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -160,6 +161,24 @@ def _analyze_file(path: Path, project_root: Path, source_dir: str) -> Optional[F
             class_info = _extract_class(node, module_path)
             file_info.classes.append(class_info)
 
+    # 计算 hash
+    source_lines = source.splitlines()
+    for func in file_info.functions:
+        func.signature_hash = _compute_signature_hash(func)
+        func.body_hash = _compute_body_hash(source_lines, func.line_start, func.line_end)
+        func.call_hash = _compute_call_hash(func.calls)
+
+    for cls in file_info.classes:
+        for method in cls.methods:
+            method.signature_hash = _compute_signature_hash(method)
+            method.body_hash = _compute_body_hash(source_lines, method.line_start, method.line_end)
+            method.call_hash = _compute_call_hash(method.calls)
+        cls.body_hash = _compute_body_hash(source_lines, cls.line_start, cls.line_end)
+        cls.call_hash = _compute_call_hash(
+            list(set(c for m in cls.methods for c in m.calls))
+        )
+        cls.signature_hash = _compute_class_signature_hash(cls)
+
     return file_info
 
 
@@ -282,3 +301,34 @@ def _path_to_module(rel_path: str, source_dir: str) -> str:
         rel_path = rel_path[:-3]
 
     return rel_path.replace("/", ".")
+
+
+def _compute_signature_hash(func: FunctionInfo) -> str:
+    """计算函数签名 hash。"""
+    params_str = ",".join(
+        f"{p.name}:{p.annotation or ''}" for p in func.parameters
+    )
+    canonical = f"{func.name}({params_str})->{func.return_annotation or ''}"
+    return hashlib.sha256(canonical.encode()).hexdigest()[:16]
+
+
+def _compute_class_signature_hash(cls: ClassInfo) -> str:
+    """计算类签名 hash。"""
+    bases = ",".join(cls.bases)
+    method_sigs = ",".join(sorted(m.signature_hash for m in cls.methods))
+    canonical = f"{cls.name}({bases})[{method_sigs}]"
+    return hashlib.sha256(canonical.encode()).hexdigest()[:16]
+
+
+def _compute_body_hash(source_lines: list[str], line_start: int, line_end: int) -> str:
+    """计算代码体 hash（去注释去空行）。"""
+    body = source_lines[line_start - 1:line_end]
+    stripped = [l for l in body if l.strip() and not l.strip().startswith("#")]
+    content = "\n".join(stripped)
+    return hashlib.sha256(content.encode()).hexdigest()[:16]
+
+
+def _compute_call_hash(calls: list[str]) -> str:
+    """计算调用列表 hash。"""
+    content = ",".join(sorted(calls))
+    return hashlib.sha256(content.encode()).hexdigest()[:16]
