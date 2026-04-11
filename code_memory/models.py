@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
+from typing import Optional, TypedDict
 
 
 # ─────────────────────────────────────────────
@@ -22,6 +22,33 @@ class BlockKind(str, Enum):
     FUNCTION = "function"
     CLASS = "class"
     METHOD = "method"
+
+
+# ─────────────────────────────────────────────
+# 注释类型定义（TypedDict）
+# ─────────────────────────────────────────────
+
+
+class SystemAnnotation(TypedDict):
+    what: str
+    components: list[str]
+    data_flow: str
+    external_deps: list[str]
+
+
+class ModuleAnnotation(TypedDict):
+    what: str
+    exposes: list[str]
+    depends_on: list[str]
+    used_by: list[str]
+
+
+class BlockAnnotation(TypedDict):
+    what: str
+    input: dict[str, str]
+    output: str
+    boundary: str
+    parent: str
 
 
 # ─────────────────────────────────────────────
@@ -47,7 +74,10 @@ class FunctionInfo:
     return_annotation: Optional[str] = None
     docstring: Optional[str] = None
     decorators: list[str] = field(default_factory=list)
-    calls: list[str] = field(default_factory=list)  # 该函数内调用的其他函数
+    calls: list[str] = field(default_factory=list)
+    signature_hash: str = ""
+    body_hash: str = ""
+    call_hash: str = ""
 
 
 @dataclass
@@ -60,15 +90,18 @@ class ClassInfo:
     bases: list[str] = field(default_factory=list)
     methods: list[FunctionInfo] = field(default_factory=list)
     decorators: list[str] = field(default_factory=list)
+    signature_hash: str = ""
+    body_hash: str = ""
+    call_hash: str = ""
 
 
 @dataclass
 class FileInfo:
-    file_path: str  # 相对于 project_root
-    module_path: str  # Python 模块路径，如 src.stage2.wds_parser
+    file_path: str
+    module_path: str
     docstring: Optional[str] = None
-    imports: list[str] = field(default_factory=list)  # from x import y 的完整形式
-    all_exports: Optional[list[str]] = None  # __all__ 内容
+    imports: list[str] = field(default_factory=list)
+    all_exports: Optional[list[str]] = None
     functions: list[FunctionInfo] = field(default_factory=list)
     classes: list[ClassInfo] = field(default_factory=list)
     line_count: int = 0
@@ -77,11 +110,11 @@ class FileInfo:
 @dataclass
 class PackageInfo:
     """一个 Python 包（含 __init__.py 的目录）。"""
-    package_path: str  # 相对路径
-    module_path: str  # Python 模块路径
+    package_path: str
+    module_path: str
     init_docstring: Optional[str] = None
     init_all_exports: Optional[list[str]] = None
-    files: list[str] = field(default_factory=list)  # 包内文件的相对路径
+    files: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -93,34 +126,31 @@ class Skeleton:
     scan_time: str
     files: list[FileInfo] = field(default_factory=list)
     packages: list[PackageInfo] = field(default_factory=list)
-    call_graph: dict[str, list[str]] = field(default_factory=dict)  # caller → [callees]
+    call_graph: dict[str, list[str]] = field(default_factory=dict)
     stats: dict[str, int] = field(default_factory=dict)
 
 
 # ─────────────────────────────────────────────
-# Step 2 产出：注释修改清单
+# Step 2 产出：注释存储
 # ─────────────────────────────────────────────
 
 
 @dataclass
 class AnnotationEntry:
-    """一条待写入的注释。"""
-    file_path: str  # 相对于 project_root
-    target_name: str  # qualified_name 或 "__module__" 表示模块级
+    """一条注释。"""
+    qualified_name: str
     level: AnnotationLevel
-    content: str  # 完整的注释文本（含 @memory: 前缀和字段）
-    action: str = "insert"  # insert | replace | skip
-    line_hint: Optional[int] = None  # 建议插入位置
+    annotation: dict  # SystemAnnotation | ModuleAnnotation | BlockAnnotation
 
 
 @dataclass
-class AnnotationPlan:
+class AnnotationStore:
     """Step 2 的完整产出。"""
     project_name: str
     generation_time: str
     model_used: str
-    entries: list[AnnotationEntry] = field(default_factory=list)
-    skipped: list[str] = field(default_factory=list)  # 被跳过的 qualified names
+    entries: dict[str, AnnotationEntry] = field(default_factory=dict)
+    skipped: list[str] = field(default_factory=list)
     stats: dict[str, int] = field(default_factory=dict)
 
 
@@ -132,13 +162,16 @@ class AnnotationPlan:
 @dataclass
 class IndexEntry:
     """索引中的一条记录。主键是 id (qualified_name)。"""
-    id: str  # qualified_name，稳定标识符
+    id: str
     level: AnnotationLevel
-    annotation: str  # 完整注释文本
-    file_path: str  # 相对于 project_root
+    file_path: str
     line_start: int
     line_end: int
     parent_module: Optional[str] = None
+    signature_hash: str = ""
+    body_hash: str = ""
+    call_hash: str = ""
+    annotation: Optional[dict] = None
     used_by: list[str] = field(default_factory=list)
     depends_on: list[str] = field(default_factory=list)
 
