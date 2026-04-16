@@ -25,28 +25,36 @@ def build_index(skeleton: Skeleton, annotations: AnnotationStore) -> ShallowInde
         extraction_time=datetime.now(timezone.utc).isoformat(),
     )
 
-    # 处理包 → system/module 级
+    # 处理系统级注释（__system__: 前缀）
+    system_qname = f"__system__:{skeleton.project_name}"
+    system_data = annotations.entries.get(system_qname)
+    if system_data:
+        index.system_entries.append(IndexEntry(
+            id=system_qname,
+            level=AnnotationLevel.SYSTEM,
+            file_path="",
+            line_start=0,
+            line_end=0,
+            parent_module=None,
+            annotation=system_data.annotation,
+        ))
+
+    # 处理包 → module 级
     for pkg in skeleton.packages:
         entry_data = annotations.entries.get(pkg.module_path)
         ann_dict = entry_data.annotation if entry_data else None
-        level = entry_data.level if entry_data else AnnotationLevel.MODULE
 
         parent = pkg.module_path.rsplit(".", 1)[0] if "." in pkg.module_path else None
 
-        idx_entry = IndexEntry(
+        index.module_entries.append(IndexEntry(
             id=pkg.module_path,
-            level=level,
+            level=AnnotationLevel.MODULE,
             file_path=pkg.package_path + "/__init__.py",
             line_start=1,
             line_end=1,
             parent_module=parent,
             annotation=ann_dict,
-        )
-
-        if level == AnnotationLevel.SYSTEM:
-            index.system_entries.append(idx_entry)
-        else:
-            index.module_entries.append(idx_entry)
+        ))
 
     # 处理文件中的函数和类 → block 级
     for file_info in skeleton.files:

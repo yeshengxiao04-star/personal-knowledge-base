@@ -35,8 +35,13 @@ def generate_annotations(
     config: ProjectConfig,
     llm_client: Optional[LLMClient] = None,
     existing: Optional[AnnotationStore] = None,
+    save_callback: Optional[callable] = None,
 ) -> AnnotationStore:
-    """生成完整的注释存储。从系统→模块→块逐层生成。"""
+    """生成完整的注释存储。从系统→模块→块逐层生成。
+
+    Args:
+        save_callback: 可选回调，每生成一条注释后调用 save_callback(store) 做增量持久化。
+    """
     if llm_client is None:
         llm_client = LLMClient(config.llm)
 
@@ -46,27 +51,38 @@ def generate_annotations(
         model_used=config.llm.model,
     )
 
+    def _add_entry(entry: AnnotationEntry):
+        store.entries[entry.qualified_name] = entry
+        if save_callback:
+            save_callback(store)
+
     # Step 2.1: 系统级注释
     logger.info("Generating system-level annotation...")
-    system_entry = _generate_system_annotation(skeleton, llm_client, config, existing)
+    system_entry = _safe_generate(
+        _generate_system_annotation, skeleton, llm_client, config, existing
+    )
     if system_entry:
-        store.entries[system_entry.qualified_name] = system_entry
+        _add_entry(system_entry)
 
     # Step 2.2: 模块级注释
     logger.info("Generating module-level annotations...")
     system_context = json.dumps(system_entry.annotation, ensure_ascii=False, indent=2) if system_entry else ""
-    for pkg in skeleton.packages:
-        entry = _generate_module_annotation(
+    for i, pkg in enumerate(skeleton.packages):
+        logger.info(f"  Module [{i+1}/{len(skeleton.packages)}]: {pkg.module_path or '(root)'}")
+        entry = _safe_generate(
+            _generate_module_annotation,
             pkg, skeleton, system_context, llm_client, config, existing
         )
         if entry:
-            store.entries[entry.qualified_name] = entry
+            _add_entry(entry)
 
     # Step 2.3: 块级注释
     logger.info("Generating block-level annotations...")
-    for file_info in skeleton.files:
+    for i, file_info in enumerate(skeleton.files):
+        logger.info(f"  File [{i+1}/{len(skeleton.files)}]: {file_info.module_path}")
         _generate_block_annotations(
-            file_info, skeleton, store, llm_client, config, existing
+            file_info, skeleton, store, llm_client, config, existing,
+            save_callback=save_callback,
         )
 
     store.stats = {
@@ -77,6 +93,15 @@ def generate_annotations(
     }
 
     return store
+
+
+def _safe_generate(fn, *args, **kwargs) -> Optional[AnnotationEntry]:
+    """包裹 LLM 调用，捕获超时和网络错误，返回 None 而非阻断管线。"""
+    try:
+        return fn(*args, **kwargs)
+    except Exception as e:
+        logger.warning(f"LLM call failed ({type(e).__name__}): {e}")
+        return None
 
 
 def _generate_system_annotation(
@@ -171,6 +196,7 @@ def _generate_block_annotations(
     llm_client: LLMClient,
     config: ProjectConfig,
     existing: Optional[AnnotationStore],
+    save_callback: Optional[callable] = None,
 ) -> None:
     """为文件中的函数和类生成块级注释。"""
     parts = file_info.module_path.rsplit(".", 1)
@@ -181,31 +207,39 @@ def _generate_block_annotations(
 
     project_root = Path(skeleton.project_root)
 
+    def _add_entry(entry: AnnotationEntry):
+        store.entries[entry.qualified_name] = entry
+        if save_callback:
+            save_callback(store)
+
     for func in file_info.functions:
-        entry = _generate_single_block(
+        entry = _safe_generate(
+            _generate_single_block,
             func, file_info, module_context, project_root, llm_client, config, existing
         )
         if entry:
-            store.entries[entry.qualified_name] = entry
+            _add_entry(entry)
         elif func.qualified_name:
             store.skipped.append(func.qualified_name)
 
     for cls in file_info.classes:
-        cls_entry = _generate_class_block(
+        cls_entry = _safe_generate(
+            _generate_class_block,
             cls, file_info, module_context, project_root, llm_client, config, existing
         )
         if cls_entry:
-            store.entries[cls_entry.qualified_name] = cls_entry
+            _add_entry(cls_entry)
 
         for method in cls.methods:
             if method.name.startswith("_") and method.name != "__init__":
                 store.skipped.append(method.qualified_name)
                 continue
-            entry = _generate_single_block(
+            entry = _safe_generate(
+                _generate_single_block,
                 method, file_info, module_context, project_root, llm_client, config, existing
             )
             if entry:
-                store.entries[entry.qualified_name] = entry
+                _add_entry(entry)
             else:
                 store.skipped.append(method.qualified_name)
 
@@ -349,13 +383,8 @@ def _parse_json_response(raw: str) -> Optional[dict]:
 
 
 def _find_system_qname(skeleton: Skeleton) -> str:
-    """找到系统级注释的 qualified name。"""
-    if skeleton.packages:
-        top_level = [p for p in skeleton.packages if "." not in p.module_path]
-        if top_level:
-            return top_level[0].module_path
-        return skeleton.packages[0].module_path
-    return skeleton.project_name
+    """系统级注释的 qualified name。用 __system__:<project_name> 避免与 module qname 冲突。"""
+    return f"__system__:{skeleton.project_name}"
 
 
 def _format_packages_summary(packages: list[PackageInfo]) -> str:

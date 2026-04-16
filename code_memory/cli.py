@@ -111,15 +111,21 @@ def _run_init(args):
         logging.info("Step 2: LLM annotation generation...")
         from .init.annotator import generate_annotations
 
-        # 加载已有注释（用于 overwrite_existing 检查）
+        # 加载已有注释（用于 overwrite_existing 检查 + 增量续跑）
         annotations_path = memory_dir / "annotations.json"
         existing = _load_annotations(annotations_path) if annotations_path.exists() else None
 
-        annotations = generate_annotations(skeleton, config, existing=existing)
-        annotations_path.write_text(
-            json.dumps(_annotation_store_to_dict(annotations), ensure_ascii=False, indent=2),
-            encoding="utf-8",
+        def _save_incremental(store):
+            """每条注释生成后增量写盘，防止中途崩溃丢失进度。"""
+            annotations_path.write_text(
+                json.dumps(_annotation_store_to_dict(store), ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+
+        annotations = generate_annotations(
+            skeleton, config, existing=existing, save_callback=_save_incremental,
         )
+        _save_incremental(annotations)  # 最终写入含 stats
         logging.info(f"  Annotations: {annotations.stats}")
     else:
         annotations_path = memory_dir / "annotations.json"

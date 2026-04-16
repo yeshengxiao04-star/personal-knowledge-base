@@ -70,3 +70,71 @@
 - 保持三步管线（scan → annotate → index）而非压缩为两步，保留可调试空间和 LLM 结果缓存能力
 
 **影响范围**: Init 管线全部三步。Maintain / Use 阶段尚未实现，不受影响。CLI 接口有 breaking change（`--step write`/`--step extract` 移除）。
+
+---
+
+## 2026-04-13T00:30 — LLM Client 防御性改造 + VWS 实战验证
+
+**变更模块**: `code_memory/llm/client.py`、`code_memory/init/annotator.py`、`code_memory/cli.py`、`code_memory/config.py`、`code_memory/init/indexer.py`
+**变更类型**: 增强 + 修复
+**测试**: 24 passed
+
+**动机**: 对 Vibe_Workflow_Studio（105 文件、20K LOC）进行首次 Init 实战验证。发现两类问题：(1) Kimi Code API 偶发挂死导致管线阻断，进度全丢；(2) 系统级注释 qname 与 root module qname 冲突，system_count 始终为 0。
+
+**核心方案**: LLM 调用层加防御性编程（timeout + 重试 + 容错 + 增量写盘），system qname 改用 `__system__:` 前缀避免冲突。
+
+**具体内容**:
+
+1. **LLM Client 多协议支持 + 超时控制**（`client.py`）：
+   - 新增 Anthropic 协议支持（`api_format: "anthropic"`），与 OpenAI 协议并存
+   - 单请求 timeout 90 秒（`float` 直传 SDK），connect timeout 10 秒
+   - `max_retries=2`，超时/网络错误自动重试
+
+2. **Config 扩展**（`config.py`）：
+   - `LLMConfig` 新增 `api_format: str = "openai"` 字段，支持 `"openai"` 和 `"anthropic"` 两种协议
+
+3. **Annotator 防御性改造**（`annotator.py`）：
+   - `_safe_generate()` 包裹所有 LLM 调用：捕获任意异常，记 warning 跳过，不阻断管线
+   - `save_callback` 参数：每生成一条注释即回调写盘，支持增量持久化
+   - 进度日志：`Module [3/19]: app`、`File [42/105]: stage2.wds_parser`
+   - system qname 改为 `__system__:<project_name>`，不再与 root module 冲突
+
+4. **CLI 增量写盘**（`cli.py`）：
+   - `_save_incremental(store)` 回调传给 annotator，每条注释生成后写 `annotations.json`
+   - 中途崩溃/超时不丢已有进度，重跑自动跳过已完成条目
+
+5. **Indexer 修复**（`indexer.py`）：
+   - system 注释查找改为 `__system__:<project_name>` 前缀
+   - 包遍历不再混淆 system/module level，system 单独处理
+
+**发现的问题与修复过程**:
+
+| 问题 | 原因 | 修复 |
+|------|------|------|
+| 管线卡死 35 分钟 | Kimi Code API 偶发不响应 + Anthropic SDK 默认 read timeout 600s | 改传 `float(90)` + `_safe_generate` 兜底 |
+| httpx.Timeout 不生效 | Anthropic SDK `timeout` 参数期望 `float`，传 `httpx.Timeout` 对象被忽略 | 改为 `float(self.REQUEST_TIMEOUT)` |
+| 进度全丢 | annotator 跑完才一次性写 annotations.json | 改为 `save_callback` 每条写盘 |
+| system_count: 0 | `_find_system_qname` 返回 `""`（root module_path），module 级注释同 key 覆盖 | system qname 改为 `__system__:vibe-workflow` |
+| `python` 命令不存在 | macOS 只有 `python3` | 全部改用 `python3` |
+| openai/anthropic 包缺失 | 系统 Python 未安装 | `pip3 install --break-system-packages` |
+
+**VWS 实战验证结果**:
+
+| 指标 | 数值 |
+|------|------|
+| 扫描文件 | 105 |
+| 总行数 | 20,799 |
+| LLM 调用次数 | 434（1 system + 19 module + 414 block） |
+| 跳过（私有/短函数） | 257 |
+| 失败 | 0 |
+| 注释覆盖率 | 434/691 = 63% |
+| 产出体积 | skeleton 772K + annotations 289K + shallow index 653K |
+| 耗时 | ~45 分钟（串行，含一次中断续跑） |
+
+**设计决策**:
+- timeout 传 `float` 而非 `httpx.Timeout`，兼容 Anthropic/OpenAI 两家 SDK
+- 增量写盘每条都写（非批量），牺牲少量 I/O 换取最大进度保全
+- `_safe_generate` 在 annotator 层而非 client 层，保持 client 的异常语义清晰
+- system qname 用 `__system__:` 前缀而非项目名，因为项目名可能与某个包名冲突
+
+**后续方向**: LLM 调用并发化（asyncio + Semaphore），从 45 分钟压缩到 3-5 分钟。依赖关系分析已完成：system 串行 → module 全并发 → block 全并发。

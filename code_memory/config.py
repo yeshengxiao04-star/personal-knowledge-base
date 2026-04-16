@@ -13,6 +13,7 @@ class LLMConfig:
     model: str = "kimi-k2"
     api_base: Optional[str] = None
     api_key_env: str = "LLM_API_KEY"  # 环境变量名
+    api_format: str = "openai"  # "openai" 或 "anthropic"
     temperature: float = 0.3
     max_tokens: int = 2000
 
