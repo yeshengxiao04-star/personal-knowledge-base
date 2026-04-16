@@ -1,0 +1,595 @@
+[
+  {
+    "id": "",
+    "level": "module",
+    "file_path": "src/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "基于Gradio的Web应用主入口，提供Dify工作流编译系统的交互式UI、认证、环境管理和会话管理功能",
+      "exposes": [
+        "launch_app",
+        "create_auth_router",
+        "detect_dify",
+        "load_env_config",
+        "has_api_key",
+        "save_env_config",
+        "get_llm_config",
+        "get_stage_llm_config",
+        "get_dify_config",
+        "build_app",
+        "setup_logging",
+        "map_phase_to_ui_stage",
+        "format_stage_bar",
+        "format_editor_stage_bar",
+        "list_sessions",
+        "main",
+        "generate_semantic_id",
+        "build_reverse_id_map",
+        "decompile_node",
+        "selector_to_wds_ref"
+      ],
+      "depends_on": [],
+      "used_by": [
+        "cli"
+      ]
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "app",
+    "level": "module",
+    "file_path": "src/app/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "Gradio/FastAPI 混合应用入口，提供 Web UI、认证路由、环境配置管理和会话管理功能",
+      "exposes": [
+        "launch_app",
+        "create_auth_router",
+        "detect_dify",
+        "load_env_config",
+        "has_api_key",
+        "save_env_config",
+        "get_llm_config",
+        "get_stage_llm_config",
+        "get_dify_config",
+        "build_app",
+        "setup_logging",
+        "map_phase_to_ui_stage",
+        "format_stage_bar",
+        "format_editor_stage_bar",
+        "list_sessions"
+      ],
+      "depends_on": [],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "decompile",
+    "level": "module",
+    "file_path": "src/decompile/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "Dify DSL反编译与骨架提取，将Dify工作流DSL转换为内部中间表示和可编辑的骨架结构",
+      "exposes": [
+        "Skeleton",
+        "load_dsl",
+        "decompile_node",
+        "build_reverse_id_map"
+      ],
+      "depends_on": [],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "llm",
+    "level": "module",
+    "file_path": "src/llm/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "LLM客户端封装与调用管理，提供统一的LLM交互接口、调用日志记录和响应处理",
+      "exposes": [
+        "LLMClient",
+        "LLMResponse",
+        "create_client",
+        "LLMCallLogger",
+        "LoggingLLMClient"
+      ],
+      "depends_on": [
+        "models.stage_a"
+      ],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "llm.prompts",
+    "level": "module",
+    "file_path": "src/llm/prompts/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": "llm",
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "LLM提示词构建模块，为设计阶段生成结构化提示词模板",
+      "exposes": [
+        "build_user_prompt",
+        "build_repair_user_prompt",
+        "format_plan_constraints",
+        "build_constrained_user_prompt"
+      ],
+      "depends_on": [
+        "models.stage_a"
+      ],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "models",
+    "level": "module",
+    "file_path": "src/models/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "定义全系统各阶段共享的数据模型（Pydantic Schema），包括蓝图、IR、WDS、工具目录等核心数据结构",
+      "exposes": [
+        "Blueprint",
+        "IRGraph",
+        "WDS",
+        "ToolCatalog",
+        "StageAContract"
+      ],
+      "depends_on": [],
+      "used_by": [
+        "stage0",
+        "stage_a",
+        "stage1",
+        "stage2",
+        "stage3",
+        "orchestrator",
+        "repair",
+        "decompile",
+        "validator"
+      ]
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "orchestrator",
+    "level": "module",
+    "file_path": "src/orchestrator/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "多阶段编译管道的编排引擎，负责任务调度、状态管理和条件执行",
+      "exposes": [
+        "run_pipeline",
+        "load_manifest",
+        "parse_ref",
+        "resolve_ref",
+        "resolve_map",
+        "evaluate_condition"
+      ],
+      "depends_on": [
+        "orchestrator.dify_client",
+        "orchestrator.manifest",
+        "orchestrator.state"
+      ],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "repair",
+    "level": "module",
+    "file_path": "src/repair/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "错误分类与LLM修复模块，对WDS蓝图和Dify DSL进行错误诊断、规则修复和LLM智能修复",
+      "exposes": [
+        "repair_wds",
+        "repair_dsl",
+        "classify_error",
+        "classify_errors",
+        "llm_repair_wds",
+        "llm_repair_dsl",
+        "fix_missing_field",
+        "fix_unknown_node_type",
+        "fix_dangling_edge",
+        "fix_no_start_node",
+        "fix_no_terminal_node",
+        "fix_missing_dsl_field",
+        "fix_duplicate_node_id_dsl",
+        "fix_unknown_model_dsl",
+        "fix_no_end_node_dsl",
+        "apply_wds_rules",
+        "apply_dsl_rules"
+      ],
+      "depends_on": [
+        "llm.client",
+        "llm.utils"
+      ],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "repair.prompts",
+    "level": "module",
+    "file_path": "src/repair/prompts/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": "repair",
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "LLM修复阶段的提示词模板集合，为错误诊断和自动修复提供结构化prompt",
+      "exposes": [],
+      "depends_on": [],
+      "used_by": [
+        "repair"
+      ]
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "stage0",
+    "level": "module",
+    "file_path": "src/stage0/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "自然语言需求解析与蓝图构建，通过多维度对话引擎提取角色、场景、任务、约束等要素，生成结构化的SceneBlueprint",
+      "exposes": [
+        "create_engine",
+        "load_engine_state",
+        "merge_dim12",
+        "merge_dim34",
+        "merge_dim5_closure",
+        "merge_supplement",
+        "inject_stage_a_feedback",
+        "extract_phase_output",
+        "is_phase_complete",
+        "validate_phase_output",
+        "build_recovery_instruction",
+        "build_role_bias_context",
+        "build_decomposition_summary",
+        "build_gaps_list",
+        "build_context"
+      ],
+      "depends_on": [
+        "src.llm.client",
+        "src.models.blueprint",
+        "src.stage0.prompts"
+      ],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "stage0.prompts",
+    "level": "module",
+    "file_path": "src/stage0/prompts/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": "stage0",
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "stage0需求解析阶段的提示词模板库，为蓝图构建提供结构化prompt生成",
+      "exposes": [
+        "build_recovery_instruction",
+        "build_role_bias_context",
+        "build_decomposition_summary",
+        "build_gaps_list",
+        "build_context"
+      ],
+      "depends_on": [],
+      "used_by": [
+        "stage0"
+      ]
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "stage1",
+    "level": "module",
+    "file_path": "src/stage1/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "将stage_a生成的契约规范（WorkflowPlan）编译为WDS中间表示，并进行计划验证与合成",
+      "exposes": [
+        "compile_spec_to_wds",
+        "SynthesisResult",
+        "validate_wds_against_plan"
+      ],
+      "depends_on": [
+        "src.llm.client",
+        "src.llm.prompts.design_to_wds",
+        "src.llm.utils",
+        "src.models.stage_a",
+        "src.models.wds",
+        "src.stage2.wds_parser",
+        "src.tool_catalog"
+      ],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "stage2",
+    "level": "module",
+    "file_path": "src/stage2/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "将WDS（工作流描述规范）解析并构建为中间表示（IR）图结构，实现从结构化工作流描述到可执行IR的转换",
+      "exposes": [
+        "compile_wds_to_ir",
+        "build_graph",
+        "assemble_ir",
+        "resolve_ref",
+        "extract_template_refs",
+        "resolve_context_from",
+        "parse_wds",
+        "validate_ir"
+      ],
+      "depends_on": [
+        "models.ir"
+      ],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "stage3",
+    "level": "module",
+    "file_path": "src/stage3/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "将中间表示(IR)编译为Dify可执行的DSL工作流，包含节点映射、布局计算、YAML发射和DSL验证",
+      "exposes": [
+        "compile_ir_to_dify_dsl",
+        "emit_dsl",
+        "compute_layout",
+        "map_source_handle",
+        "map_edge",
+        "map_conversation_variable",
+        "validate_dsl",
+        "validate_dsl_strict",
+        "build_id_maps",
+        "ref_to_selector",
+        "replace_prompt_refs",
+        "generate_new_timestamp_id",
+        "adapt_dsl_providers",
+        "query_dify_providers"
+      ],
+      "depends_on": [
+        "models.ir"
+      ],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "stage_a",
+    "level": "module",
+    "file_path": "src/stage_a/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "stage0蓝图到stage1计划的桥梁，将场景蓝图分解为多工作流计划并生成数据契约、清单规范和节点规划",
+      "exposes": [
+        "run_stage_a",
+        "generate_data_contract",
+        "generate_manifest",
+        "plan_workflow_nodes",
+        "decompose_by_rules",
+        "generate_design_specs",
+        "validate_decomposition"
+      ],
+      "depends_on": [
+        "models.blueprint",
+        "models.stage_a",
+        "pseudo_nodes",
+        "stage0"
+      ],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "stage_a.prompts",
+    "level": "module",
+    "file_path": "src/stage_a/prompts/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": "stage_a",
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "stage_a阶段各类任务的LLM提示词构建模块，提供分解、字段提取、规范骨架等场景的prompt生成",
+      "exposes": [
+        "build_user_prompt"
+      ],
+      "depends_on": [],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "supervisor",
+    "level": "module",
+    "file_path": "src/supervisor/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "监控告警系统，负责心跳扫描、异常分类、告警生成与自动化修复动作执行",
+      "exposes": [
+        "run_supervisor_once",
+        "run_supervisor",
+        "main",
+        "write_alert",
+        "triage",
+        "heartbeat_scan",
+        "alert_file_to_event"
+      ],
+      "depends_on": [
+        "llm.client"
+      ],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "validator",
+    "level": "module",
+    "file_path": "src/validator/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "工作流运行时验证与自动修复，通过执行测试、捕获运行时错误并触发LLM修复循环确保生成DSL的正确性",
+      "exposes": [
+        "validate_workflow",
+        "import_and_run",
+        "extract_runtime_errors",
+        "repair_runtime_errors",
+        "generate_test_inputs"
+      ],
+      "depends_on": [
+        "config",
+        "llm.client",
+        "llm.utils"
+      ],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  },
+  {
+    "id": "workflow_editor",
+    "level": "module",
+    "file_path": "src/workflow_editor/__init__.py",
+    "line_start": 1,
+    "line_end": 1,
+    "parent_module": null,
+    "signature_hash": "",
+    "body_hash": "",
+    "call_hash": "",
+    "annotation": {
+      "what": "对话式工作流编辑器，支持WDS片段编译、图结构手术和交互式编辑流程",
+      "exposes": [
+        "CompileResult",
+        "compile_fragment",
+        "parse_wds_fragment",
+        "EditorDialogue",
+        "EditorPhase",
+        "P4Result",
+        "GraphSurgeon",
+        "SurgeryContext",
+        "check_continuity",
+        "render_skeleton",
+        "NodeInfo"
+      ],
+      "depends_on": [
+        "llm.client",
+        "models.ir",
+        "models.wds",
+        "orchestrator.dify_client",
+        "stage2.ir_assembler",
+        "stage2.wds_parser",
+        "stage3.dify_mapper"
+      ],
+      "used_by": []
+    },
+    "used_by": [],
+    "depends_on": []
+  }
+]

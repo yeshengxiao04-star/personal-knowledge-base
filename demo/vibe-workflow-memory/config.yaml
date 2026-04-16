@@ -1,0 +1,25 @@
+project_name: vibe-workflow
+source_dirs:
+  - src
+exclude_patterns:
+  - __pycache__
+  - .git
+  - .venv
+  - node_modules
+  - output
+  - results
+  - runs
+  - sessions
+  - static
+
+llm:
+  model: kimi-code
+  api_base: https://api.kimi.com/coding/
+  api_key_env: KIMI_CODE_API_KEY
+  api_format: anthropic
+  temperature: 0.3
+  max_tokens: 2000
+
+annotation:
+  overwrite_existing: false
+  min_function_lines: 3

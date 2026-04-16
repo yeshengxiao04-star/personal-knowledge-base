@@ -1,0 +1,3330 @@
+{
+  "app:launch_app": [
+    "build_app",
+    "get",
+    "create_auth_router",
+    "FastAPI",
+    "FileResponse",
+    "include_router",
+    "mount_gradio_app",
+    "_Path",
+    "run",
+    "queue",
+    "AuthManager",
+    "resolve"
+  ],
+  "app.auth:AuthManager.__init__": [
+    "Path",
+    "_ensure_dirs",
+    "resolve"
+  ],
+  "app.auth:AuthManager._ensure_dirs": [
+    "mkdir"
+  ],
+  "app.auth:AuthManager.create_guest": [
+    "token_hex",
+    "_save_user",
+    "UserRecord",
+    "_generate_guest_token"
+  ],
+  "app.auth:AuthManager.login_guest": [
+    "create_auth_session",
+    "_find_user_by_guest_token"
+  ],
+  "app.auth:AuthManager._generate_guest_token": [
+    "choice",
+    "join",
+    "range"
+  ],
+  "app.auth:AuthManager._find_user_by_guest_token": [
+    "loads",
+    "UserRecord",
+    "endswith",
+    "iterdir",
+    "read_text"
+  ],
+  "app.auth:AuthManager.find_or_create_github_user": [
+    "exists",
+    "loads",
+    "now",
+    "isoformat",
+    "UserRecord",
+    "sub",
+    "read_text",
+    "_save_user"
+  ],
+  "app.auth:AuthManager.create_auth_session": [
+    "model_dump",
+    "token_hex",
+    "write_text",
+    "_clear_sessions_for_user",
+    "dumps",
+    "AuthSession"
+  ],
+  "app.auth:AuthManager.validate_session": [
+    "exists",
+    "total_seconds",
+    "loads",
+    "now",
+    "_load_user",
+    "read_text",
+    "unlink",
+    "fromisoformat",
+    "AuthSession"
+  ],
+  "app.auth:AuthManager.logout": [
+    "exists",
+    "unlink"
+  ],
+  "app.auth:AuthManager._clear_sessions_for_user": [
+    "get",
+    "loads",
+    "endswith",
+    "iterdir",
+    "unlink",
+    "read_text"
+  ],
+  "app.auth:AuthManager.can_create_session": [
+    "_load_user"
+  ],
+  "app.auth:AuthManager.increment_session_count": [
+    "_save_user",
+    "_load_user"
+  ],
+  "app.auth:AuthManager.create_oauth_state": [
+    "token_hex",
+    "now",
+    "write_text",
+    "isoformat",
+    "dumps"
+  ],
+  "app.auth:AuthManager.validate_oauth_state": [
+    "exists",
+    "total_seconds",
+    "loads",
+    "now",
+    "read_text",
+    "unlink",
+    "fromisoformat"
+  ],
+  "app.auth:AuthManager._save_user": [
+    "model_dump",
+    "write_text",
+    "dumps"
+  ],
+  "app.auth:AuthManager.get_user": [
+    "read_text",
+    "exists",
+    "loads",
+    "UserRecord"
+  ],
+  "app.auth_routes:_cookie_secure": [
+    "getenv",
+    "lower"
+  ],
+  "app.auth_routes:create_auth_router": [
+    "find_or_create_github_user",
+    "APIRouter",
+    "JSONResponse",
+    "validate_session",
+    "validate_oauth_state",
+    "json",
+    "get",
+    "login_guest",
+    "urlencode",
+    "RedirectResponse",
+    "set_cookie",
+    "get_user",
+    "delete_cookie",
+    "create_oauth_state",
+    "logout",
+    "_cookie_secure",
+    "getenv",
+    "create_auth_session",
+    "post",
+    "create_guest",
+    "Cookie"
+  ],
+  "app.dify_detect:detect_dify": [
+    "json",
+    "get",
+    "rstrip"
+  ],
+  "app.env_manager:_get_env_path": [
+    "Path",
+    "resolve"
+  ],
+  "app.env_manager:load_env_config": [
+    "splitlines",
+    "exists",
+    "_get_env_path",
+    "startswith",
+    "split",
+    "strip",
+    "read_text"
+  ],
+  "app.env_manager:has_api_key": [
+    "strip",
+    "get",
+    "bool",
+    "load_env_config"
+  ],
+  "app.env_manager:save_env_config": [
+    "splitlines",
+    "exists",
+    "_get_env_path",
+    "startswith",
+    "join",
+    "write_text",
+    "split",
+    "strip",
+    "read_text",
+    "append"
+  ],
+  "app.env_manager:get_llm_config": [
+    "get",
+    "load_env_config"
+  ],
+  "app.env_manager:get_stage_llm_config": [
+    "get",
+    "get_llm_config",
+    "load_env_config"
+  ],
+  "app.env_manager:get_dify_config": [
+    "get",
+    "load_env_config"
+  ],
+  "app.gradio_ui:_get_session": [
+    "get"
+  ],
+  "app.gradio_ui:_obfuscate_dir_name": [
+    "group",
+    "md5",
+    "match",
+    "hexdigest",
+    "encode"
+  ],
+  "app.gradio_ui:_format_session_list": [
+    "_obfuscate_dir_name",
+    "append",
+    "get",
+    "split"
+  ],
+  "app.gradio_ui:_build_all_configs": [
+    "get_stage_llm_config",
+    "get_llm_config",
+    "LLMConfig"
+  ],
+  "app.gradio_ui:_persist_session": [
+    "save_ui_state",
+    "save_chatbot_history",
+    "save_state"
+  ],
+  "app.gradio_ui:_check_supervisor_message": [
+    "exists",
+    "get",
+    "get_run_dir",
+    "loads",
+    "read_text"
+  ],
+  "app.gradio_ui:_is_within_download_window": [
+    "int",
+    "today",
+    "date"
+  ],
+  "app.gradio_ui:_make_download_html": [
+    "decode",
+    "b64encode",
+    "join",
+    "append",
+    "encode"
+  ],
+  "app.gradio_ui:_make_download_area": [
+    "_is_within_download_window",
+    "_make_download_html",
+    "get_dsl_files"
+  ],
+  "app.gradio_ui:_on_page_load_auth": [
+    "update",
+    "SessionService",
+    "start_dialogue",
+    "restore_from_run_dir",
+    "_make_download_area",
+    "get",
+    "get_current_phase",
+    "load_ui_state",
+    "_build_all_configs",
+    "list_sessions",
+    "map_phase_to_ui_stage",
+    "load_chatbot_history",
+    "increment_session_count",
+    "loads",
+    "find_run_by_session_id",
+    "has_api_key",
+    "get_run_dir",
+    "format_stage_bar",
+    "_format_session_list",
+    "_page_load_unauthenticated"
+  ],
+  "app.gradio_ui:_page_load_unauthenticated": [
+    "update"
+  ],
+  "app.gradio_ui:_on_logout": [
+    "update"
+  ],
+  "app.gradio_ui:_on_save_config": [
+    "update",
+    "increment_session_count",
+    "SessionService",
+    "get_run_dir",
+    "format_stage_bar",
+    "_format_session_list",
+    "save_env_config",
+    "_build_all_configs",
+    "start_dialogue",
+    "list_sessions",
+    "strip"
+  ],
+  "app.gradio_ui:_on_send_message": [
+    "update",
+    "_check_supervisor_message",
+    "get_dsl_files",
+    "execute_modify_compile",
+    "lower",
+    "run_stage_a_only",
+    "read_text",
+    "enumerate",
+    "exists",
+    "_make_download_area",
+    "get",
+    "is_dir",
+    "b64encode",
+    "send_modify_message",
+    "validate_single_workflow",
+    "update_run_status",
+    "map_phase_to_ui_stage",
+    "_get_session",
+    "iterdir",
+    "format_editor_stage_bar",
+    "encode",
+    "loads",
+    "send_message",
+    "len",
+    "compile_single_workflow",
+    "format_stage_bar",
+    "get_run_dir",
+    "sorted",
+    "decode",
+    "items",
+    "join",
+    "Group",
+    "finish_and_publish",
+    "start_modify",
+    "strip",
+    "_persist_session",
+    "append"
+  ],
+  "app.gradio_ui:_on_import_dify": [
+    "update",
+    "Group",
+    "join",
+    "DifyConfig",
+    "strip",
+    "_get_session",
+    "import_to_dify"
+  ],
+  "app.gradio_ui:_on_file_upload": [
+    "update",
+    "decode",
+    "isinstance",
+    "receive_modify_file",
+    "_Path",
+    "_persist_session",
+    "_get_session",
+    "format_editor_stage_bar",
+    "read_text"
+  ],
+  "app.gradio_ui:_on_select_session": [
+    "str",
+    "_make_download_area",
+    "update",
+    "get",
+    "_check_supervisor_message",
+    "format_stage_bar",
+    "get_current_phase",
+    "load_ui_state",
+    "_build_all_configs",
+    "find_run_by_session_id",
+    "getattr",
+    "start_dialogue",
+    "load_chatbot_history",
+    "restore_from_run_dir",
+    "map_phase_to_ui_stage"
+  ],
+  "app.gradio_ui:_on_new_session": [
+    "update",
+    "increment_session_count",
+    "SessionService",
+    "get_run_dir",
+    "format_stage_bar",
+    "_format_session_list",
+    "_build_all_configs",
+    "start_dialogue",
+    "list_sessions",
+    "has_api_key",
+    "can_create_session"
+  ],
+  "app.gradio_ui:build_app": [
+    "File",
+    "Column",
+    "Button",
+    "Sidebar",
+    "Chatbot",
+    "AuthManager",
+    "click",
+    "Dropdown",
+    "State",
+    "load",
+    "HTML",
+    "Textbox",
+    "Markdown",
+    "submit",
+    "Radio",
+    "Blocks",
+    "Group",
+    "Row",
+    "change"
+  ],
+  "app.logging_config:setup_logging": [
+    "StreamHandler",
+    "getLogger",
+    "mkdir",
+    "addHandler",
+    "_JSONFormatter",
+    "FileHandler",
+    "setLevel",
+    "setFormatter"
+  ],
+  "app.logging_config:_JSONFormatter.format": [
+    "str",
+    "now",
+    "getattr",
+    "isoformat",
+    "dumps",
+    "getMessage"
+  ],
+  "app.models:map_phase_to_ui_stage": [
+    "get"
+  ],
+  "app.models:format_stage_bar": [
+    "append",
+    "join",
+    "list"
+  ],
+  "app.models:format_editor_stage_bar": [
+    "append",
+    "join",
+    "list"
+  ],
+  "app.models:UserRecord.model_post_init": [
+    "isoformat",
+    "now"
+  ],
+  "app.models:AuthSession.model_post_init": [
+    "isoformat",
+    "now"
+  ],
+  "app.services:_build_client": [
+    "create_client"
+  ],
+  "app.services:SessionService.__init__": [
+    "_build_client",
+    "info",
+    "LoggingLLMClient",
+    "setup_logging",
+    "create_run_dir",
+    "write_run_meta",
+    "LLMCallLogger"
+  ],
+  "app.services:SessionService.start_dialogue": [
+    "set_context",
+    "info",
+    "start",
+    "create_engine"
+  ],
+  "app.services:SessionService.send_message": [
+    "RuntimeError",
+    "get_current_phase",
+    "DialogueResponse",
+    "is_ready_for_stage_a",
+    "is_finalized",
+    "respond"
+  ],
+  "app.services:SessionService.run_stage_a_only": [
+    "RuntimeError",
+    "inject_stage_a_feedback",
+    "StageAFeedback",
+    "run_stage_a",
+    "get_blueprint",
+    "set_context"
+  ],
+  "app.services:SessionService.compile_single_workflow": [
+    "ensure_compiled_wf_dir",
+    "set_context",
+    "write_text",
+    "compile_spec_to_dify"
+  ],
+  "app.services:SessionService.validate_single_workflow": [
+    "ensure_compiled_wf_dir",
+    "_get_dify_client",
+    "exists",
+    "get",
+    "on_status",
+    "_emit",
+    "ValidationResult",
+    "_build_client",
+    "validate_workflow",
+    "get_stage_llm_config",
+    "set_context",
+    "LLMConfig",
+    "StatusEvent",
+    "LoggingLLMClient"
+  ],
+  "app.services:SessionService._get_dify_client": [
+    "DifyClient",
+    "login",
+    "get_dify_config"
+  ],
+  "app.services:SessionService.start_modify": [
+    "_get_dify_client",
+    "create_client",
+    "get",
+    "get_stage_llm_config",
+    "GraphSurgeon",
+    "EditorDialogue",
+    "LoggingLLMClient"
+  ],
+  "app.services:SessionService.receive_modify_file": [
+    "RuntimeError",
+    "receive_file"
+  ],
+  "app.services:SessionService.send_modify_message": [
+    "respond",
+    "RuntimeError"
+  ],
+  "app.services:SessionService.get_modify_dsl": [
+    "RuntimeError",
+    "get_modified_dsl"
+  ],
+  "app.services:SessionService.execute_modify_compile": [
+    "set_phase",
+    "RuntimeError",
+    "execute_p4"
+  ],
+  "app.services:SessionService.finish_and_publish": [
+    "PipelineResult",
+    "exists",
+    "str",
+    "sorted",
+    "is_dir",
+    "publish_to_output",
+    "_save_blueprint",
+    "update_run_status",
+    "append",
+    "iterdir",
+    "len"
+  ],
+  "app.services:SessionService.run_pipeline": [
+    "StatusEvent",
+    "max",
+    "run_stage_a_only",
+    "enumerate",
+    "exists",
+    "get",
+    "on_status",
+    "is_dir",
+    "validate_single_workflow",
+    "update_run_status",
+    "iterdir",
+    "RuntimeError",
+    "_emit",
+    "write_alert",
+    "extend",
+    "len",
+    "PipelineResult",
+    "compile_single_workflow",
+    "sorted",
+    "items",
+    "finish_and_publish",
+    "info",
+    "append"
+  ],
+  "app.services:SessionService.import_to_dify": [
+    "login",
+    "get_dsl_files",
+    "DifyRunResult",
+    "on_status",
+    "import_dsl",
+    "_emit",
+    "enumerate",
+    "len",
+    "max",
+    "StatusEvent",
+    "DifyClient",
+    "append",
+    "detect_dify"
+  ],
+  "app.services:SessionService.get_blueprint_yaml": [
+    "dump",
+    "get_blueprint",
+    "model_dump"
+  ],
+  "app.services:SessionService.get_dsl_files": [
+    "exists",
+    "sorted",
+    "is_dir",
+    "read_text",
+    "append",
+    "iterdir"
+  ],
+  "app.services:SessionService.save_state": [
+    "mkdir",
+    "write_text",
+    "save_state",
+    "dumps"
+  ],
+  "app.services:SessionService.save_chatbot_history": [
+    "mkdir",
+    "write_text",
+    "dumps"
+  ],
+  "app.services:SessionService.load_chatbot_history": [
+    "read_text",
+    "exists",
+    "loads"
+  ],
+  "app.services:SessionService.save_ui_state": [
+    "mkdir",
+    "write_text",
+    "dumps"
+  ],
+  "app.services:SessionService.load_ui_state": [
+    "read_text",
+    "exists",
+    "get",
+    "loads"
+  ],
+  "app.services:SessionService.restore_from_run_dir": [
+    "exists",
+    "__new__",
+    "get",
+    "loads",
+    "_build_client",
+    "info",
+    "load_run_summary",
+    "load_engine_state",
+    "read_text",
+    "LoggingLLMClient",
+    "LLMCallLogger"
+  ],
+  "app.services:SessionService._save_blueprint": [
+    "get_blueprint_yaml",
+    "write_text"
+  ],
+  "app.session_manager:_label_from_dir_name": [
+    "match",
+    "group"
+  ],
+  "app.session_manager:list_sessions": [
+    "list_runs",
+    "exists",
+    "get",
+    "loads",
+    "len",
+    "reverse",
+    "load_run_summary",
+    "read_text",
+    "append",
+    "_label_from_dir_name",
+    "SessionInfo"
+  ],
+  "cli:_ensure_parent_dir": [
+    "mkdir"
+  ],
+  "cli:_wrap_client_with_logger": [
+    "LoggingLLMClient",
+    "isinstance",
+    "LLMCallLogger"
+  ],
+  "cli:_compile": [
+    "ensure_compiled_wf_dir",
+    "exists",
+    "create_client",
+    "copy2",
+    "str",
+    "publish_to_output",
+    "compile_wds_to_dify",
+    "print",
+    "getattr",
+    "hasattr",
+    "_ensure_parent_dir",
+    "_wrap_client_with_logger",
+    "update_run_status",
+    "Path",
+    "create_run_dir",
+    "write_run_meta"
+  ],
+  "cli:_validate": [
+    "exists",
+    "compile_wds_to_ir",
+    "print",
+    "Path",
+    "len"
+  ],
+  "cli:_design": [
+    "ensure_compiled_wf_dir",
+    "exists",
+    "create_client",
+    "copy2",
+    "str",
+    "print",
+    "_ensure_parent_dir",
+    "_wrap_client_with_logger",
+    "pipeline_spec_to_wds",
+    "update_run_status",
+    "Path",
+    "create_run_dir",
+    "write_run_meta"
+  ],
+  "cli:_build": [
+    "ensure_compiled_wf_dir",
+    "exists",
+    "create_client",
+    "copy2",
+    "str",
+    "publish_to_output",
+    "print",
+    "getattr",
+    "_ensure_parent_dir",
+    "_wrap_client_with_logger",
+    "update_run_status",
+    "compile_spec_to_dify",
+    "Path",
+    "create_run_dir",
+    "write_run_meta"
+  ],
+  "cli:_eval": [
+    "run_eval",
+    "print"
+  ],
+  "cli:_orchestrate": [
+    "str",
+    "exists",
+    "getenv",
+    "run_pipeline",
+    "print",
+    "split",
+    "ensure_orchestrate_dir",
+    "update_run_status",
+    "Path",
+    "create_run_dir",
+    "print_exc",
+    "write_run_meta"
+  ],
+  "cli:_dialogue_plan": [
+    "ensure_compiled_wf_dir",
+    "publish_to_output",
+    "print",
+    "dump",
+    "run_stage_a",
+    "getattr",
+    "_wrap_client_with_logger",
+    "lower",
+    "write_run_meta",
+    "save_state",
+    "exists",
+    "get",
+    "compile_spec_to_dify",
+    "input",
+    "inject_stage_a_feedback",
+    "load_engine_state",
+    "update_run_status",
+    "model_dump",
+    "respond",
+    "create_client",
+    "mkdir",
+    "get_last_output",
+    "start",
+    "StageAFeedback",
+    "get_blueprint",
+    "is_ready_for_stage_a",
+    "is_finalized",
+    "Path",
+    "create_engine",
+    "len",
+    "sorted",
+    "write_text",
+    "strip",
+    "glob",
+    "create_run_dir"
+  ],
+  "cli:_dialogue": [
+    "print",
+    "dump",
+    "getattr",
+    "_wrap_client_with_logger",
+    "lower",
+    "write_run_meta",
+    "save_state",
+    "exists",
+    "input",
+    "load_engine_state",
+    "update_run_status",
+    "model_dump",
+    "respond",
+    "create_client",
+    "mkdir",
+    "start",
+    "get_blueprint",
+    "is_ready_for_stage_a",
+    "is_finalized",
+    "Path",
+    "create_engine",
+    "write_text",
+    "strip",
+    "create_run_dir"
+  ],
+  "cli:_plan": [
+    "str",
+    "exists",
+    "create_client",
+    "SceneBlueprint",
+    "publish_to_output",
+    "items",
+    "safe_load",
+    "print",
+    "run_stage_a",
+    "len",
+    "_wrap_client_with_logger",
+    "update_run_status",
+    "read_text",
+    "Path",
+    "create_run_dir",
+    "write_run_meta"
+  ],
+  "cli:_modify": [
+    "print",
+    "getattr",
+    "_wrap_client_with_logger",
+    "DifyClient",
+    "write_run_meta",
+    "str",
+    "exists",
+    "login",
+    "input",
+    "update_run_status",
+    "respond",
+    "receive_file",
+    "create_client",
+    "EditorDialogue",
+    "Path",
+    "get_dify_config",
+    "GraphSurgeon",
+    "strip",
+    "read_text",
+    "create_run_dir"
+  ],
+  "cli:_start": [
+    "_dialogue_plan",
+    "getattr"
+  ],
+  "cli:_webapp": [
+    "launch_app"
+  ],
+  "cli:_add_llm_args": [
+    "add_argument"
+  ],
+  "cli:main": [
+    "add_subparsers",
+    "add_argument",
+    "add_parser",
+    "ArgumentParser",
+    "parse_args",
+    "_add_llm_args",
+    "func",
+    "_webapp",
+    "set_defaults"
+  ],
+  "decompile.id_generator:_slugify": [
+    "normalize",
+    "rstrip",
+    "sub",
+    "lower",
+    "strip",
+    "len"
+  ],
+  "decompile.id_generator:generate_semantic_id": [
+    "add",
+    "get",
+    "_slugify",
+    "replace"
+  ],
+  "decompile.id_generator:build_reverse_id_map": [
+    "str",
+    "set",
+    "get",
+    "generate_semantic_id"
+  ],
+  "decompile.node_decompiler:decompile_node": [
+    "get",
+    "dispatcher"
+  ],
+  "decompile.node_decompiler:_decompile_start": [
+    "get"
+  ],
+  "decompile.node_decompiler:_decompile_end": [
+    "append",
+    "get",
+    "selector_to_wds_ref"
+  ],
+  "decompile.node_decompiler:_decompile_answer": [
+    "restore_prompt_refs",
+    "get"
+  ],
+  "decompile.node_decompiler:_decompile_llm": [
+    "restore_prompt_refs",
+    "get",
+    "selector_to_wds_ref"
+  ],
+  "decompile.node_decompiler:_decompile_if_else": [
+    "append",
+    "get",
+    "selector_to_wds_ref"
+  ],
+  "decompile.node_decompiler:_decompile_question_classifier": [
+    "set",
+    "get",
+    "selector_to_wds_ref",
+    "_slugify_class_id",
+    "append"
+  ],
+  "decompile.node_decompiler:_slugify_class_id": [
+    "add",
+    "sub",
+    "lower",
+    "strip"
+  ],
+  "decompile.node_decompiler:_decompile_knowledge_retrieval": [
+    "get",
+    "selector_to_wds_ref"
+  ],
+  "decompile.node_decompiler:_decompile_code": [
+    "get",
+    "isinstance",
+    "items",
+    "selector_to_wds_ref",
+    "append",
+    "_unwrap_code_from_main"
+  ],
+  "decompile.node_decompiler:_unwrap_code_from_main": [
+    "splitlines",
+    "startswith",
+    "join",
+    "pop",
+    "strip",
+    "append"
+  ],
+  "decompile.node_decompiler:_decompile_tool": [
+    "restore_prompt_refs",
+    "items",
+    "get",
+    "isinstance"
+  ],
+  "decompile.node_decompiler:_decompile_datasource": [
+    "restore_prompt_refs",
+    "items",
+    "get",
+    "isinstance"
+  ],
+  "decompile.node_decompiler:_decompile_template_transform": [
+    "restore_jinja2_to_prompt_refs",
+    "get"
+  ],
+  "decompile.node_decompiler:_decompile_variable_aggregator": [
+    "append",
+    "get",
+    "selector_to_wds_ref",
+    "isinstance"
+  ],
+  "decompile.node_decompiler:_decompile_assigner": [
+    "get",
+    "selector_to_wds_ref"
+  ],
+  "decompile.node_decompiler:_decompile_document_extractor": [
+    "get",
+    "selector_to_wds_ref"
+  ],
+  "decompile.node_decompiler:_decompile_http_request": [
+    "restore_prompt_refs",
+    "get",
+    "isinstance"
+  ],
+  "decompile.node_decompiler:_decompile_loop": [
+    "get"
+  ],
+  "decompile.node_decompiler:_decompile_loop_start": [
+    "get"
+  ],
+  "decompile.node_decompiler:_decompile_loop_end": [
+    "get"
+  ],
+  "decompile.node_decompiler:_decompile_iteration": [
+    "get",
+    "selector_to_wds_ref"
+  ],
+  "decompile.node_decompiler:_decompile_iteration_start": [
+    "get"
+  ],
+  "decompile.node_decompiler:_decompile_list_operator": [
+    "get",
+    "selector_to_wds_ref"
+  ],
+  "decompile.node_decompiler:_decompile_parameter_extractor": [
+    "restore_prompt_refs",
+    "get",
+    "selector_to_wds_ref"
+  ],
+  "decompile.node_decompiler:_decompile_trigger_webhook": [
+    "get"
+  ],
+  "decompile.node_decompiler:_decompile_trigger_schedule": [
+    "get"
+  ],
+  "decompile.node_decompiler:_decompile_human_input": [
+    "get"
+  ],
+  "decompile.ref_restorer:selector_to_wds_ref": [
+    "startswith",
+    "join",
+    "get",
+    "len"
+  ],
+  "decompile.ref_restorer:restore_prompt_refs": [
+    "get",
+    "group",
+    "split",
+    "sub",
+    "len"
+  ],
+  "decompile.ref_restorer:restore_jinja2_to_prompt_refs": [
+    "_replace_in_jinja_blocks",
+    "get",
+    "group",
+    "sorted",
+    "items",
+    "selector_to_wds_ref",
+    "replace",
+    "escape",
+    "sub",
+    "len"
+  ],
+  "decompile.skeleton:load_dsl": [
+    "isinstance",
+    "safe_load",
+    "read_text",
+    "Path",
+    "endswith"
+  ],
+  "decompile.skeleton:extract_skeleton": [
+    "str",
+    "set",
+    "get",
+    "add",
+    "keys",
+    "ValueError",
+    "list",
+    "SkeletonNode",
+    "pop",
+    "SkeletonEdge",
+    "load_dsl",
+    "append",
+    "Skeleton",
+    "enumerate"
+  ],
+  "decompile.skeleton:Skeleton.display": [
+    "append",
+    "join",
+    "display"
+  ],
+  "decompile.skeleton:Skeleton.get_node_by_index": [
+    "len"
+  ],
+  "decompile.skeleton:Skeleton.get_node_by_id": [
+    "get"
+  ],
+  "llm.call_logger:LLMCallLogger.__post_init__": [
+    "mkdir"
+  ],
+  "llm.call_logger:LLMCallLogger.log_call": [
+    "now",
+    "join",
+    "isoformat",
+    "dumps",
+    "open",
+    "append",
+    "write"
+  ],
+  "llm.call_logger:LoggingLLMClient.complete": [
+    "int",
+    "complete",
+    "monotonic",
+    "log_call"
+  ],
+  "llm.call_logger:LoggingLLMClient.converse": [
+    "log_call",
+    "converse",
+    "monotonic",
+    "int"
+  ],
+  "llm.client:create_client": [
+    "OpenAIClient",
+    "get",
+    "AnthropicClient",
+    "ClaudeCodeClient",
+    "ValueError"
+  ],
+  "llm.client:LLMClient.converse": [
+    "complete",
+    "reversed",
+    "get"
+  ],
+  "llm.client:OpenAIClient.__init__": [
+    "get",
+    "OpenAI"
+  ],
+  "llm.client:OpenAIClient.complete": [
+    "LLMResponse",
+    "create"
+  ],
+  "llm.client:OpenAIClient.converse": [
+    "LLMResponse",
+    "append",
+    "create"
+  ],
+  "llm.client:AnthropicClient.__init__": [
+    "Anthropic",
+    "get"
+  ],
+  "llm.client:AnthropicClient.complete": [
+    "LLMResponse",
+    "create",
+    "hasattr"
+  ],
+  "llm.client:AnthropicClient.converse": [
+    "LLMResponse",
+    "create",
+    "hasattr"
+  ],
+  "llm.client:ClaudeCodeClient._resolve_model": [
+    "get"
+  ],
+  "llm.client:ClaudeCodeClient.complete": [
+    "LLMResponse",
+    "get",
+    "RuntimeError",
+    "loads",
+    "_resolve_model",
+    "run",
+    "strip"
+  ],
+  "llm.prompts.design_to_wds:build_repair_user_prompt": [
+    "join"
+  ],
+  "llm.prompts.design_to_wds:format_plan_constraints": [
+    "append",
+    "join"
+  ],
+  "llm.prompts.design_to_wds:build_constrained_user_prompt": [
+    "format_plan_constraints"
+  ],
+  "llm.utils:extract_yaml_block": [
+    "startswith",
+    "search",
+    "group",
+    "strip"
+  ],
+  "orchestrator.dify_client:DifyClient.__init__": [
+    "Session",
+    "rstrip"
+  ],
+  "orchestrator.dify_client:DifyClient.login": [
+    "json",
+    "get",
+    "decode",
+    "RuntimeError",
+    "b64encode",
+    "post",
+    "encode",
+    "raise_for_status"
+  ],
+  "orchestrator.dify_client:DifyClient.import_dsl": [
+    "json",
+    "get",
+    "post",
+    "_h",
+    "raise_for_status"
+  ],
+  "orchestrator.dify_client:DifyClient.delete_app": [
+    "_h",
+    "delete"
+  ],
+  "orchestrator.dify_client:DifyClient.list_model_providers": [
+    "json",
+    "get",
+    "append",
+    "_h",
+    "raise_for_status"
+  ],
+  "orchestrator.dify_client:DifyClient.export_dsl": [
+    "_h",
+    "json",
+    "get",
+    "raise_for_status"
+  ],
+  "orchestrator.dify_client:DifyClient.get_draft": [
+    "_h",
+    "json",
+    "get",
+    "raise_for_status"
+  ],
+  "orchestrator.dify_client:DifyClient.update_draft": [
+    "json",
+    "_h",
+    "post",
+    "raise_for_status"
+  ],
+  "orchestrator.dify_client:DifyClient.list_apps": [
+    "_h",
+    "json",
+    "get",
+    "raise_for_status"
+  ],
+  "orchestrator.dify_client:DifyClient.run_workflow": [
+    "str",
+    "get",
+    "keys",
+    "loads",
+    "list",
+    "startswith",
+    "post",
+    "round",
+    "strip",
+    "append",
+    "_h",
+    "iter_lines",
+    "raise_for_status"
+  ],
+  "orchestrator.engine:run_pipeline": [
+    "login",
+    "load_manifest",
+    "print",
+    "rstrip",
+    "split",
+    "run",
+    "DifyClient",
+    "StateStore",
+    "PipelineEngine"
+  ],
+  "orchestrator.engine:PipelineEngine.run": [
+    "save_meta",
+    "keys",
+    "isinstance",
+    "save_stage_output",
+    "evaluate_condition",
+    "list",
+    "RuntimeError",
+    "print",
+    "load_stage_output",
+    "_cleanup_apps",
+    "_execute_stage",
+    "set_stage_status",
+    "build_context",
+    "_import_all_dsl"
+  ],
+  "orchestrator.engine:PipelineEngine._execute_stage": [
+    "_execute_loop",
+    "_execute_run",
+    "_execute_file",
+    "ValueError",
+    "_execute_parallel"
+  ],
+  "orchestrator.engine:PipelineEngine._execute_run": [
+    "get",
+    "RuntimeError",
+    "_apply_transform",
+    "_run_and_print_nodes",
+    "resolve_map"
+  ],
+  "orchestrator.engine:PipelineEngine._execute_parallel": [
+    "get",
+    "ThreadPoolExecutor",
+    "RuntimeError",
+    "sum",
+    "join",
+    "print",
+    "as_completed",
+    "min",
+    "result",
+    "submit",
+    "values",
+    "append",
+    "resolve_map",
+    "len",
+    "run_workflow"
+  ],
+  "orchestrator.engine:PipelineEngine._execute_file": [
+    "str",
+    "sorted",
+    "RuntimeError",
+    "print",
+    "glob",
+    "read_text",
+    "Path"
+  ],
+  "orchestrator.engine:PipelineEngine._execute_loop": [
+    "get",
+    "RuntimeError",
+    "evaluate_condition",
+    "print",
+    "pop",
+    "range",
+    "_apply_transform",
+    "_run_and_print_nodes",
+    "resolve_map"
+  ],
+  "orchestrator.engine:PipelineEngine._import_all_dsl": [
+    "exists",
+    "import_dsl",
+    "items",
+    "print",
+    "read_text",
+    "len",
+    "FileNotFoundError"
+  ],
+  "orchestrator.engine:PipelineEngine._cleanup_apps": [
+    "items",
+    "delete_app"
+  ],
+  "orchestrator.engine:PipelineEngine._apply_transform": [
+    "exists",
+    "ImportError",
+    "isinstance",
+    "AttributeError",
+    "print",
+    "hasattr",
+    "TypeError",
+    "run",
+    "module_from_spec",
+    "spec_from_file_location",
+    "exec_module",
+    "FileNotFoundError"
+  ],
+  "orchestrator.engine:PipelineEngine._run_and_print_nodes": [
+    "print",
+    "get",
+    "run_workflow"
+  ],
+  "orchestrator.manifest:load_manifest": [
+    "read_text",
+    "safe_load",
+    "PipelineManifest"
+  ],
+  "orchestrator.manifest:Stage._validate_mode": [
+    "sum",
+    "ValueError",
+    "model_validator"
+  ],
+  "orchestrator.manifest:PipelineManifest._validate_references": [
+    "append",
+    "join",
+    "ValueError",
+    "model_validator"
+  ],
+  "orchestrator.resolver:parse_ref": [
+    "split",
+    "match",
+    "group",
+    "strip"
+  ],
+  "orchestrator.resolver:resolve_ref": [
+    "isinstance"
+  ],
+  "orchestrator.resolver:resolve_map": [
+    "resolve_ref",
+    "items",
+    "parse_ref"
+  ],
+  "orchestrator.resolver:evaluate_condition": [
+    "split",
+    "_parse_literal",
+    "_compare",
+    "bool",
+    "parse_ref",
+    "strip",
+    "resolve_ref",
+    "len"
+  ],
+  "orchestrator.resolver:_parse_literal": [
+    "startswith",
+    "int",
+    "float",
+    "parse_ref",
+    "lower",
+    "strip",
+    "resolve_ref",
+    "endswith"
+  ],
+  "orchestrator.resolver:_compare": [
+    "float"
+  ],
+  "orchestrator.state:StateStore.__init__": [
+    "_load_status",
+    "mkdir",
+    "now",
+    "strftime"
+  ],
+  "orchestrator.state:StateStore._load_status": [
+    "read_text",
+    "exists",
+    "_status_file",
+    "loads"
+  ],
+  "orchestrator.state:StateStore._save_status": [
+    "write_text",
+    "_status_file",
+    "dumps"
+  ],
+  "orchestrator.state:StateStore.save_meta": [
+    "_meta_file",
+    "write_text",
+    "dumps"
+  ],
+  "orchestrator.state:StateStore.set_stage_status": [
+    "_save_status"
+  ],
+  "orchestrator.state:StateStore.get_stage_status": [
+    "get"
+  ],
+  "orchestrator.state:StateStore.save_stage_output": [
+    "write_text",
+    "dumps"
+  ],
+  "orchestrator.state:StateStore.load_stage_output": [
+    "read_text",
+    "exists",
+    "loads"
+  ],
+  "orchestrator.state:StateStore.get_completed_stages": [
+    "items"
+  ],
+  "orchestrator.state:StateStore.build_context": [
+    "get_completed_stages",
+    "load_stage_output"
+  ],
+  "pipeline:_save_artifact": [
+    "mkdir",
+    "write_text"
+  ],
+  "pipeline:_save_json": [
+    "_save_artifact",
+    "dumps"
+  ],
+  "pipeline:_wf_artifact_dir": [
+    "ensure_compiled_wf_dir"
+  ],
+  "pipeline:_save_repair_record": [
+    "append",
+    "_save_json",
+    "list",
+    "getattr"
+  ],
+  "pipeline:_adapt_providers": [
+    "adapt_dsl_providers",
+    "safe_load",
+    "emit_dsl",
+    "read_text",
+    "query_dify_providers"
+  ],
+  "pipeline:inject_pseudo_stubs": [
+    "get",
+    "_get",
+    "generate_stub_code",
+    "get_pseudo_node"
+  ],
+  "pipeline:compile_wds_to_dify": [
+    "copy2",
+    "repair_wds",
+    "print",
+    "compile_ir_to_dify_dsl",
+    "exists",
+    "get",
+    "isinstance",
+    "safe_load",
+    "emit_dsl",
+    "repair_dsl",
+    "_wf_artifact_dir",
+    "_adapt_providers",
+    "model_dump",
+    "resolve",
+    "_save_json",
+    "compile_wds_to_ir",
+    "build_dsl",
+    "extend",
+    "Path",
+    "_save_repair_record",
+    "_session_id_from_run_dir",
+    "read_text"
+  ],
+  "pipeline:pipeline_spec_to_wds": [
+    "write_text",
+    "compile_spec_to_wds",
+    "_wf_artifact_dir",
+    "_save_artifact",
+    "read_text",
+    "Path"
+  ],
+  "pipeline:compile_spec_to_dify": [
+    "assemble_ir",
+    "copy2",
+    "repair_wds",
+    "print",
+    "compile_ir_to_dify_dsl",
+    "pipeline_spec_to_wds",
+    "str",
+    "exists",
+    "get",
+    "emit_dsl",
+    "repair_dsl",
+    "_wf_artifact_dir",
+    "_adapt_providers",
+    "model_dump",
+    "resolve",
+    "_save_json",
+    "build_dsl",
+    "extend",
+    "_save_repair_record",
+    "inject_pseudo_stubs",
+    "_session_id_from_run_dir",
+    "parse_wds",
+    "validate_ir"
+  ],
+  "pipeline:_detect_history_context": [
+    "str",
+    "exists",
+    "sorted",
+    "is_dir",
+    "extract_vws_signature",
+    "find_run_by_session_id",
+    "load_run_summary",
+    "read_text",
+    "glob"
+  ],
+  "pseudo_nodes:get_pseudo_node": [
+    "get"
+  ],
+  "pseudo_nodes:match_pseudo_type": [
+    "items",
+    "lower"
+  ],
+  "pseudo_nodes:generate_stub_code": [
+    "get"
+  ],
+  "repair:repair_wds": [
+    "deepcopy",
+    "get",
+    "list",
+    "dump",
+    "llm_repair_wds",
+    "_validate_wds_dict",
+    "range",
+    "classify_errors",
+    "apply_wds_rules",
+    "insert",
+    "RepairAttempt",
+    "append",
+    "len",
+    "RepairResult"
+  ],
+  "repair:repair_dsl": [
+    "deepcopy",
+    "llm_repair_dsl",
+    "list",
+    "_validate_dsl_dict",
+    "classify_errors",
+    "range",
+    "RepairAttempt",
+    "append",
+    "apply_dsl_rules",
+    "len",
+    "RepairResult"
+  ],
+  "repair:_validate_wds_dict": [
+    "parse_wds",
+    "assemble_ir",
+    "validate_ir",
+    "str"
+  ],
+  "repair:_validate_dsl_dict": [
+    "validate_dsl"
+  ],
+  "repair.classifier:classify_error": [
+    "search",
+    "groupdict",
+    "get",
+    "RepairError"
+  ],
+  "repair.classifier:classify_errors": [
+    "append",
+    "classify_error"
+  ],
+  "repair.llm_repair:llm_repair_wds": [
+    "extract_yaml_block",
+    "isinstance",
+    "safe_load",
+    "join",
+    "complete",
+    "warning",
+    "format"
+  ],
+  "repair.llm_repair:llm_repair_dsl": [
+    "extract_yaml_block",
+    "isinstance",
+    "safe_load",
+    "join",
+    "complete",
+    "dump",
+    "warning",
+    "format",
+    "len"
+  ],
+  "repair.rules:fix_missing_field": [
+    "get",
+    "_find_wds_node"
+  ],
+  "repair.rules:fix_unknown_node_type": [
+    "_find_wds_node",
+    "get_close_matches"
+  ],
+  "repair.rules:fix_dangling_edge": [
+    "get",
+    "len"
+  ],
+  "repair.rules:fix_no_start_node": [
+    "append",
+    "get",
+    "insert",
+    "setdefault"
+  ],
+  "repair.rules:fix_no_terminal_node": [
+    "get",
+    "next",
+    "capitalize",
+    "append",
+    "len"
+  ],
+  "repair.rules:fix_missing_dsl_field": [
+    "deepcopy"
+  ],
+  "repair.rules:fix_duplicate_node_id_dsl": [
+    "set",
+    "add",
+    "get",
+    "items",
+    "len",
+    "enumerate"
+  ],
+  "repair.rules:fix_unknown_model_dsl": [
+    "_get_model_provider_map",
+    "search",
+    "get",
+    "group",
+    "keys",
+    "list",
+    "isinstance",
+    "get_close_matches"
+  ],
+  "repair.rules:fix_no_end_node_dsl": [
+    "get",
+    "capitalize",
+    "int",
+    "time",
+    "append",
+    "len"
+  ],
+  "repair.rules:_find_wds_node": [
+    "get"
+  ],
+  "repair.rules:apply_wds_rules": [
+    "deepcopy",
+    "append",
+    "rule_fn"
+  ],
+  "repair.rules:apply_dsl_rules": [
+    "deepcopy",
+    "append",
+    "rule_fn"
+  ],
+  "run_dir:_today_prefix": [
+    "now",
+    "strftime"
+  ],
+  "run_dir:_next_sequence": [
+    "exists",
+    "group",
+    "is_dir",
+    "compile",
+    "int",
+    "match",
+    "max",
+    "iterdir"
+  ],
+  "run_dir:create_run_dir": [
+    "_today_prefix",
+    "RuntimeError",
+    "mkdir",
+    "range",
+    "sub",
+    "strip",
+    "_next_sequence"
+  ],
+  "run_dir:ensure_compiled_wf_dir": [
+    "mkdir"
+  ],
+  "run_dir:ensure_modify_dir": [
+    "mkdir"
+  ],
+  "run_dir:ensure_orchestrate_dir": [
+    "mkdir"
+  ],
+  "run_dir:get_run_id": [
+    "match",
+    "group"
+  ],
+  "run_dir:list_runs": [
+    "exists",
+    "sorted",
+    "is_dir",
+    "match",
+    "iterdir"
+  ],
+  "run_dir:find_run_by_session_id": [
+    "is_dir"
+  ],
+  "run_dir:load_run_summary": [
+    "read_text",
+    "exists",
+    "loads"
+  ],
+  "run_dir:write_run_meta": [
+    "get_run_id",
+    "now",
+    "write_text",
+    "isoformat",
+    "dumps"
+  ],
+  "run_dir:update_run_status": [
+    "exists",
+    "loads",
+    "now",
+    "write_text",
+    "isoformat",
+    "dumps",
+    "read_text"
+  ],
+  "run_dir:publish_to_output": [
+    "exists",
+    "copy2",
+    "sorted",
+    "is_dir",
+    "mkdir",
+    "append",
+    "iterdir",
+    "_publish_manifest"
+  ],
+  "run_dir:_publish_manifest": [
+    "copy2",
+    "get",
+    "isinstance",
+    "items",
+    "safe_load",
+    "write_text",
+    "pop",
+    "dump",
+    "read_text",
+    "endswith",
+    "len"
+  ],
+  "stage0:create_engine": [
+    "upper",
+    "SinglePromptEngine",
+    "ConversationEngine"
+  ],
+  "stage0:load_engine_state": [
+    "read_text",
+    "load_state",
+    "get",
+    "loads"
+  ],
+  "stage0.blueprint_builder:merge_dim12": [
+    "TaskDefinition",
+    "get",
+    "isinstance",
+    "Role",
+    "append",
+    "RoleBiasPrediction",
+    "enumerate"
+  ],
+  "stage0.blueprint_builder:merge_dim34": [
+    "str",
+    "get",
+    "_parse_process_step",
+    "isinstance",
+    "append"
+  ],
+  "stage0.blueprint_builder:merge_dim5_closure": [
+    "get",
+    "Constraint",
+    "isinstance"
+  ],
+  "stage0.blueprint_builder:merge_supplement": [
+    "str",
+    "get",
+    "isinstance",
+    "warning",
+    "Constraint",
+    "append"
+  ],
+  "stage0.blueprint_builder:inject_stage_a_feedback": [
+    "append"
+  ],
+  "stage0.blueprint_builder:_parse_process_step": [
+    "str",
+    "get",
+    "_parse_process_step",
+    "isinstance",
+    "ProcessStep",
+    "DecisionPoint"
+  ],
+  "stage0.engine:ConversationEngine.__init__": [
+    "SceneBlueprint",
+    "Path",
+    "PhaseState",
+    "ConversationState"
+  ],
+  "stage0.engine:ConversationEngine.start": [
+    "append",
+    "_build_system_prompt"
+  ],
+  "stage0.engine:ConversationEngine.respond": [
+    "get",
+    "_merge_phase_output",
+    "extract_phase_output",
+    "converse",
+    "_build_system_prompt",
+    "is_phase_complete",
+    "strip",
+    "append",
+    "_try_transition"
+  ],
+  "stage0.engine:ConversationEngine.inject_stage_a_feedback": [
+    "join",
+    "inject_stage_a_feedback",
+    "_build_system_prompt",
+    "append",
+    "_transition_to"
+  ],
+  "stage0.engine:ConversationEngine.save_state": [
+    "mkdir",
+    "write_text",
+    "dumps",
+    "model_dump"
+  ],
+  "stage0.engine:ConversationEngine.load_state": [
+    "SceneBlueprint",
+    "get",
+    "loads",
+    "PhaseState",
+    "read_text",
+    "cls"
+  ],
+  "stage0.engine:ConversationEngine._build_system_prompt": [
+    "build_recovery_instruction",
+    "build_decomposition_summary",
+    "join",
+    "int",
+    "dump",
+    "warning",
+    "replace",
+    "_build_decided_summary",
+    "_format_prior_conversations",
+    "build_role_bias_context",
+    "model_dump",
+    "append",
+    "build_gaps_list",
+    "len"
+  ],
+  "stage0.engine:ConversationEngine._merge_phase_output": [
+    "merge_fn"
+  ],
+  "stage0.engine:ConversationEngine._try_transition": [
+    "_transition_to",
+    "len",
+    "index"
+  ],
+  "stage0.engine:ConversationEngine._transition_to": [
+    "PhaseState",
+    "append",
+    "_build_phase_intro"
+  ],
+  "stage0.engine:ConversationEngine._format_prior_conversations": [
+    "append",
+    "join",
+    "get"
+  ],
+  "stage0.engine:ConversationEngine._summarize_dim12": [
+    "append",
+    "join"
+  ],
+  "stage0.engine:ConversationEngine._summarize_dim34": [
+    "append",
+    "join",
+    "get"
+  ],
+  "stage0.engine:ConversationEngine._summarize_dim5": [
+    "append",
+    "join"
+  ],
+  "stage0.engine:ConversationEngine._summarize_meta": [
+    "append",
+    "join",
+    "get"
+  ],
+  "stage0.engine:ConversationEngine._render_checklist": [
+    "_check_core_objective",
+    "join",
+    "_check_roles",
+    "_check_process",
+    "_check_constraints",
+    "_check_business_context",
+    "strip",
+    "append",
+    "_check_platform"
+  ],
+  "stage0.engine:ConversationEngine._truncate_summary": [
+    "len"
+  ],
+  "stage0.engine:ConversationEngine._check_platform": [
+    "_truncate_summary"
+  ],
+  "stage0.engine:ConversationEngine._check_business_context": [
+    "_truncate_summary"
+  ],
+  "stage0.engine:ConversationEngine._check_core_objective": [
+    "_truncate_summary"
+  ],
+  "stage0.engine:ConversationEngine._check_roles": [
+    "_truncate_summary",
+    "join",
+    "all"
+  ],
+  "stage0.engine:ConversationEngine._check_process": [
+    "_truncate_summary",
+    "len",
+    "all"
+  ],
+  "stage0.engine:ConversationEngine._check_constraints": [
+    "_truncate_summary",
+    "len"
+  ],
+  "stage0.engine:ConversationEngine._build_phase_intro": [
+    "get",
+    "_render_checklist"
+  ],
+  "stage0.engine:ConversationEngine._build_decided_summary": [
+    "_summarize_dim34",
+    "join",
+    "_summarize_dim12",
+    "_summarize_dim5",
+    "_summarize_meta",
+    "append"
+  ],
+  "stage0.engine_single:SinglePromptEngine.__init__": [
+    "SceneBlueprint",
+    "Path"
+  ],
+  "stage0.engine_single:SinglePromptEngine.start": [
+    "append"
+  ],
+  "stage0.engine_single:SinglePromptEngine.respond": [
+    "get",
+    "extract_phase_output",
+    "converse",
+    "_dispatch_merge",
+    "_build_system_prompt",
+    "_check_flags",
+    "strip",
+    "append",
+    "_update_phase"
+  ],
+  "stage0.engine_single:SinglePromptEngine.inject_stage_a_feedback": [
+    "extract_phase_output",
+    "converse",
+    "inject_stage_a_feedback",
+    "join",
+    "_dispatch_merge",
+    "_build_system_prompt",
+    "_check_flags",
+    "strip",
+    "append"
+  ],
+  "stage0.engine_single:SinglePromptEngine.save_state": [
+    "mkdir",
+    "write_text",
+    "dumps",
+    "model_dump"
+  ],
+  "stage0.engine_single:SinglePromptEngine.load_state": [
+    "SceneBlueprint",
+    "get",
+    "loads",
+    "read_text",
+    "cls"
+  ],
+  "stage0.engine_single:SinglePromptEngine._build_system_prompt": [
+    "build_context",
+    "replace"
+  ],
+  "stage0.engine_single:SinglePromptEngine._update_phase": [
+    "warning",
+    "get",
+    "keys",
+    "list"
+  ],
+  "stage0.engine_single:SinglePromptEngine._dispatch_merge": [
+    "get",
+    "merge_dim12",
+    "merge_supplement",
+    "merge_dim5_closure",
+    "merge_dim34"
+  ],
+  "stage0.engine_single:SinglePromptEngine._check_flags": [
+    "get"
+  ],
+  "stage0.phase_parser:extract_phase_output": [
+    "group",
+    "loads",
+    "list",
+    "isinstance",
+    "start",
+    "finditer",
+    "strip"
+  ],
+  "stage0.phase_parser:is_phase_complete": [
+    "get",
+    "bool"
+  ],
+  "stage0.phase_parser:validate_phase_output": [
+    "append",
+    "get"
+  ],
+  "stage0.prompts:build_recovery_instruction": [
+    "get"
+  ],
+  "stage0.prompts.prompt2_dim34:build_role_bias_context": [
+    "append",
+    "join",
+    "get"
+  ],
+  "stage0.prompts.prompt4_supplement:build_gaps_list": [
+    "join"
+  ],
+  "stage0.prompts.prompt_single:build_context": [
+    "append",
+    "join"
+  ],
+  "stage1.plan_validator:validate_wds_against_plan": [
+    "extend",
+    "_check_nodes",
+    "_check_edges",
+    "_check_tool_providers"
+  ],
+  "stage1.plan_validator:_check_nodes": [
+    "append",
+    "get"
+  ],
+  "stage1.plan_validator:_check_edges": [
+    "append",
+    "_edge_key"
+  ],
+  "stage1.plan_validator:_check_tool_providers": [
+    "lookup_tool",
+    "append"
+  ],
+  "stage1.synthesizer:compile_spec_to_wds": [
+    "build_repair_user_prompt",
+    "_extract_yaml_block",
+    "parse_wds",
+    "complete",
+    "range",
+    "validate_wds_against_plan",
+    "build_user_prompt",
+    "SynthesisResult",
+    "append",
+    "build_constrained_user_prompt"
+  ],
+  "stage2:compile_wds_to_ir": [
+    "parse_wds",
+    "assemble_ir",
+    "validate_ir",
+    "str"
+  ],
+  "stage2.graph_builder:build_graph": [
+    "append",
+    "GraphInfo"
+  ],
+  "stage2.ir_assembler:_infer_outputs": [
+    "_input_type_to_output_type",
+    "get",
+    "isinstance",
+    "list",
+    "OutputField",
+    "append"
+  ],
+  "stage2.ir_assembler:_input_type_to_output_type": [
+    "get"
+  ],
+  "stage2.ir_assembler:_map_start_config": [
+    "InputVariable",
+    "StartConfig"
+  ],
+  "stage2.ir_assembler:_map_end_config": [
+    "resolve_ref",
+    "append",
+    "EndOutput",
+    "EndConfig"
+  ],
+  "stage2.ir_assembler:_map_answer_config": [
+    "extract_template_refs",
+    "list",
+    "AnswerConfig"
+  ],
+  "stage2.ir_assembler:_map_llm_config": [
+    "MemoryConfig",
+    "resolve_context_from",
+    "VisionConfig",
+    "resolve_ref",
+    "extract_template_refs",
+    "LLMConfig",
+    "extend",
+    "append"
+  ],
+  "stage2.ir_assembler:_map_if_else_config": [
+    "resolve_ref",
+    "append",
+    "Condition",
+    "IfElseConfig"
+  ],
+  "stage2.ir_assembler:_map_question_classifier_config": [
+    "resolve_ref",
+    "ClassDefinition",
+    "QuestionClassifierConfig"
+  ],
+  "stage2.ir_assembler:_map_knowledge_retrieval_config": [
+    "resolve_ref",
+    "KnowledgeRetrievalConfig"
+  ],
+  "stage2.ir_assembler:_map_code_config": [
+    "CodeInput",
+    "resolve_ref",
+    "OutputField",
+    "CodeConfig",
+    "append"
+  ],
+  "stage2.ir_assembler:_map_tool_config": [
+    "items",
+    "ToolConfig",
+    "extract_template_refs",
+    "extend",
+    "ToolParameter"
+  ],
+  "stage2.ir_assembler:_map_datasource_config": [
+    "items",
+    "DataSourceConfig",
+    "extract_template_refs",
+    "extend",
+    "ToolParameter"
+  ],
+  "stage2.ir_assembler:_map_trigger_webhook_config": [
+    "TriggerWebhookConfig"
+  ],
+  "stage2.ir_assembler:_map_trigger_schedule_config": [
+    "TriggerScheduleConfig"
+  ],
+  "stage2.ir_assembler:_map_template_transform_config": [
+    "resolve_ref",
+    "append",
+    "TemplateInput",
+    "TemplateTransformConfig"
+  ],
+  "stage2.ir_assembler:_map_variable_aggregator_config": [
+    "resolve_ref",
+    "append",
+    "VariableAggregatorConfig"
+  ],
+  "stage2.ir_assembler:_map_assigner_config": [
+    "resolve_ref",
+    "append",
+    "AssignerConfig"
+  ],
+  "stage2.ir_assembler:_map_document_extractor_config": [
+    "resolve_ref",
+    "DocumentExtractorConfig"
+  ],
+  "stage2.ir_assembler:_map_list_operator_config": [
+    "resolve_ref",
+    "str",
+    "get",
+    "ListOperatorConfig"
+  ],
+  "stage2.ir_assembler:_map_parameter_extractor_config": [
+    "ParameterExtractorConfig",
+    "extract_template_refs",
+    "resolve_ref",
+    "append",
+    "extend"
+  ],
+  "stage2.ir_assembler:_map_human_input_config": [
+    "HumanInputVariable",
+    "HumanInputConfig"
+  ],
+  "stage2.ir_assembler:_map_http_request_config": [
+    "extract_template_refs",
+    "extend",
+    "list",
+    "HttpRequestConfig"
+  ],
+  "stage2.ir_assembler:assemble_ir": [
+    "ConversationVariable",
+    "get",
+    "mapper",
+    "NodeType",
+    "WorkflowIR",
+    "_infer_outputs",
+    "build_graph",
+    "IRMetadata",
+    "IREdge",
+    "IRNode",
+    "append",
+    "ValueError"
+  ],
+  "stage2.ref_resolver:resolve_ref": [
+    "ResolvedRef",
+    "len",
+    "ValueError",
+    "split"
+  ],
+  "stage2.ref_resolver:extract_template_refs": [
+    "resolve_ref",
+    "append",
+    "group",
+    "finditer"
+  ],
+  "stage2.ref_resolver:resolve_context_from": [
+    "ResolvedRef"
+  ],
+  "stage2.wds_parser:_validate_node_fields": [
+    "append",
+    "getattr"
+  ],
+  "stage2.wds_parser:parse_wds": [
+    "str",
+    "exists",
+    "WDS",
+    "type",
+    "WDSParseError",
+    "isinstance",
+    "_validate_node_fields",
+    "safe_load",
+    "errors",
+    "extend",
+    "Path",
+    "_normalize_operators",
+    "read_text"
+  ],
+  "stage2.wds_parser:WDSParseError.__init__": [
+    "super",
+    "len",
+    "__init__"
+  ],
+  "stage2.wds_validator:validate_ir": [
+    "set",
+    "add",
+    "keys",
+    "sorted",
+    "get",
+    "items",
+    "ValidationResult",
+    "popleft",
+    "deque",
+    "append",
+    "len"
+  ],
+  "stage2.wds_validator:ValidationResult.is_valid": [
+    "len"
+  ],
+  "stage3:compile_ir_to_dify_dsl": [
+    "validate_dsl",
+    "emit_dsl",
+    "build_dsl",
+    "str"
+  ],
+  "stage3.dify_emitter:_literal_representer": [
+    "represent_scalar"
+  ],
+  "stage3.dify_emitter:_str_representer": [
+    "isdigit",
+    "any",
+    "represent_scalar",
+    "startswith"
+  ],
+  "stage3.dify_emitter:_prepare_for_yaml": [
+    "isinstance",
+    "_prepare_for_yaml",
+    "items",
+    "_LiteralStr",
+    "len"
+  ],
+  "stage3.dify_emitter:emit_dsl": [
+    "mkdir",
+    "_prepare_for_yaml",
+    "dump",
+    "open"
+  ],
+  "stage3.dify_mapper:compute_layout": [
+    "get",
+    "sorted",
+    "items",
+    "float",
+    "popleft",
+    "len",
+    "setdefault",
+    "deque",
+    "max",
+    "values",
+    "append",
+    "enumerate"
+  ],
+  "stage3.dify_mapper:map_source_handle": [
+    "map_class_id"
+  ],
+  "stage3.dify_mapper:map_edge": [
+    "map_source_handle",
+    "map_node_id"
+  ],
+  "stage3.dify_mapper:map_conversation_variable": [
+    "str",
+    "uuid4",
+    "_normalize_value_type"
+  ],
+  "stage3.dify_mapper:_add_error_handling_defaults": [
+    "setdefault"
+  ],
+  "stage3.dify_mapper:collect_dependencies": [
+    "set",
+    "get",
+    "add",
+    "sorted",
+    "isinstance",
+    "split",
+    "values",
+    "append",
+    "len"
+  ],
+  "stage3.dify_mapper:_build_signature": [
+    "str",
+    "uuid4",
+    "int",
+    "time",
+    "hexdigest",
+    "sha256",
+    "encode"
+  ],
+  "stage3.dify_mapper:extract_vws_signature": [
+    "get",
+    "split"
+  ],
+  "stage3.dify_mapper:build_dsl": [
+    "map_conversation_variable",
+    "set",
+    "compute_layout",
+    "get",
+    "_make_json_parser_node_data",
+    "isinstance",
+    "collect_dependencies",
+    "_make_synthetic_edge",
+    "items",
+    "add",
+    "build_id_maps",
+    "map_edge",
+    "_build_signature",
+    "map_node_data",
+    "_add_error_handling_defaults",
+    "append",
+    "map_node_id"
+  ],
+  "stage3.dify_mapper:compile_single_node": [
+    "str",
+    "isinstance",
+    "int",
+    "IDMaps",
+    "dict",
+    "time",
+    "map_node_data",
+    "_add_error_handling_defaults",
+    "enumerate",
+    "map_node_id"
+  ],
+  "stage3.dify_mapper:compile_single_edge": [
+    "get"
+  ],
+  "stage3.dify_validator:validate_dsl": [
+    "set",
+    "get",
+    "add",
+    "intersection",
+    "append"
+  ],
+  "stage3.dify_validator:validate_dsl_strict": [
+    "validate_dsl",
+    "DSLValidationError"
+  ],
+  "stage3.dify_validator:DSLValidationError.__init__": [
+    "super",
+    "len",
+    "__init__"
+  ],
+  "stage3.id_mapping:_needs_json_parser": [
+    "len"
+  ],
+  "stage3.id_mapping:build_id_maps": [
+    "str",
+    "set",
+    "get",
+    "add",
+    "sorted",
+    "isinstance",
+    "list",
+    "keys",
+    "items",
+    "int",
+    "IDMaps",
+    "time",
+    "OutputField",
+    "values",
+    "append"
+  ],
+  "stage3.id_mapping:ref_to_selector": [
+    "map_node_id"
+  ],
+  "stage3.id_mapping:replace_prompt_refs": [
+    "group",
+    "split",
+    "sub",
+    "len",
+    "map_node_id"
+  ],
+  "stage3.id_mapping:generate_new_timestamp_id": [
+    "str",
+    "int",
+    "time"
+  ],
+  "stage3.json_parser:_make_json_parser_node_data": [
+    "_extract_expr",
+    "join",
+    "_normalize_value_type"
+  ],
+  "stage3.node_compilers:_safe_max_length": [
+    "len",
+    "encode",
+    "max"
+  ],
+  "stage3.node_compilers:_normalize_value_type": [
+    "get"
+  ],
+  "stage3.node_compilers:_wrap_code_in_main": [
+    "splitlines",
+    "join",
+    "get",
+    "strip"
+  ],
+  "stage3.node_compilers:_convert_template_to_jinja2": [
+    "group",
+    "sorted",
+    "items",
+    "replace",
+    "sub",
+    "len"
+  ],
+  "stage3.node_compilers:_infer_var_type": [
+    "get"
+  ],
+  "stage3.node_compilers:_map_start": [
+    "append",
+    "get",
+    "isinstance",
+    "_safe_max_length"
+  ],
+  "stage3.node_compilers:_map_end": [
+    "get",
+    "isinstance",
+    "_normalize_value_type",
+    "ref_to_selector",
+    "append"
+  ],
+  "stage3.node_compilers:_map_answer": [
+    "set",
+    "add",
+    "group",
+    "isinstance",
+    "finditer",
+    "split",
+    "append",
+    "replace_prompt_refs",
+    "len"
+  ],
+  "stage3.node_compilers:_map_llm": [
+    "str",
+    "uuid4",
+    "get",
+    "isinstance",
+    "ref_to_selector",
+    "append",
+    "replace_prompt_refs",
+    "ValueError"
+  ],
+  "stage3.node_compilers:_map_if_else": [
+    "str",
+    "uuid4",
+    "get",
+    "sorted",
+    "isinstance",
+    "ref_to_selector",
+    "append",
+    "_infer_var_type",
+    "ValueError"
+  ],
+  "stage3.node_compilers:_map_question_classifier": [
+    "get",
+    "isinstance",
+    "map_class_id",
+    "ref_to_selector",
+    "append",
+    "ValueError"
+  ],
+  "stage3.node_compilers:_map_knowledge_retrieval": [
+    "ref_to_selector",
+    "get",
+    "isinstance"
+  ],
+  "stage3.node_compilers:_map_code": [
+    "get",
+    "isinstance",
+    "_wrap_code_in_main",
+    "_normalize_value_type",
+    "ref_to_selector",
+    "append"
+  ],
+  "stage3.node_compilers:_map_tool": [
+    "isinstance",
+    "items",
+    "split",
+    "replace_prompt_refs",
+    "len"
+  ],
+  "stage3.node_compilers:_map_datasource": [
+    "items",
+    "replace_prompt_refs",
+    "isinstance"
+  ],
+  "stage3.node_compilers:_map_http_request": [
+    "uuid4",
+    "replace_prompt_refs",
+    "isinstance"
+  ],
+  "stage3.node_compilers:_map_template_transform": [
+    "ref_to_selector",
+    "append",
+    "_convert_template_to_jinja2",
+    "isinstance"
+  ],
+  "stage3.node_compilers:_map_variable_aggregator": [
+    "ref_to_selector",
+    "append",
+    "isinstance"
+  ],
+  "stage3.node_compilers:_map_assigner": [
+    "ref_to_selector",
+    "isinstance"
+  ],
+  "stage3.node_compilers:_map_document_extractor": [
+    "ref_to_selector",
+    "isinstance"
+  ],
+  "stage3.node_compilers:_map_list_operator": [
+    "ref_to_selector",
+    "isinstance"
+  ],
+  "stage3.node_compilers:_map_parameter_extractor": [
+    "get",
+    "isinstance",
+    "dict",
+    "ref_to_selector",
+    "replace_prompt_refs",
+    "ValueError"
+  ],
+  "stage3.node_compilers:_map_human_input": [
+    "append",
+    "get",
+    "isinstance",
+    "_safe_max_length"
+  ],
+  "stage3.node_compilers:_map_trigger_webhook": [
+    "isinstance"
+  ],
+  "stage3.node_compilers:_map_trigger_schedule": [
+    "isinstance"
+  ],
+  "stage3.node_compilers:map_node_data": [
+    "_map_knowledge_retrieval",
+    "_map_trigger_schedule",
+    "_map_parameter_extractor",
+    "_map_llm",
+    "_map_http_request",
+    "ValueError",
+    "_map_list_operator",
+    "_map_human_input",
+    "_map_document_extractor",
+    "_map_assigner",
+    "_map_if_else",
+    "_map_variable_aggregator",
+    "_map_trigger_webhook",
+    "_map_datasource",
+    "_map_code",
+    "_map_start",
+    "_map_question_classifier",
+    "_map_answer",
+    "_map_end",
+    "_map_template_transform",
+    "_map_tool"
+  ],
+  "stage3.provider_adapter:_find_replacement": [
+    "get"
+  ],
+  "stage3.provider_adapter:adapt_dsl_providers": [
+    "deepcopy",
+    "set",
+    "get",
+    "keys",
+    "_maybe_replace"
+  ],
+  "stage3.provider_adapter:_maybe_replace": [
+    "append",
+    "get",
+    "_find_replacement"
+  ],
+  "stage3.provider_adapter:query_dify_providers": [
+    "DifyClient",
+    "login",
+    "list_model_providers"
+  ],
+  "stage_a:run_stage_a": [
+    "str",
+    "generate_design_specs",
+    "model_dump",
+    "mkdir",
+    "items",
+    "write_text",
+    "generate_data_contract",
+    "_format_data_contract_md",
+    "StageAResult",
+    "dumps",
+    "decompose_by_rules",
+    "plan_workflow_nodes",
+    "extend",
+    "generate_manifest",
+    "validate_decomposition"
+  ],
+  "stage_a:_format_data_contract_md": [
+    "isinstance",
+    "items",
+    "join",
+    "setdefault",
+    "append"
+  ],
+  "stage_a.contract_generator:generate_data_contract": [
+    "get",
+    "isinstance",
+    "loads",
+    "extract_phase_output",
+    "DataContract",
+    "complete",
+    "join",
+    "_flatten",
+    "append",
+    "DataContractField"
+  ],
+  "stage_a.contract_generator:_flatten": [
+    "_flatten"
+  ],
+  "stage_a.manifest_generator:generate_manifest": [
+    "_collect_wf_inputs",
+    "dump",
+    "_build_stages",
+    "_collect_wf_outputs"
+  ],
+  "stage_a.manifest_generator:_build_stages": [
+    "set",
+    "add",
+    "get",
+    "sorted",
+    "join",
+    "min",
+    "_get_wf_name",
+    "_build_field_map",
+    "append",
+    "len"
+  ],
+  "stage_a.node_planner:plan_workflow_nodes": [
+    "_build_node_specs",
+    "_collect_leaf_steps",
+    "_build_edges",
+    "_validate_human_input_branches",
+    "WorkflowPlan",
+    "_build_step_map",
+    "extend",
+    "_apply_fields",
+    "_extract_fields_llm"
+  ],
+  "stage_a.node_planner:_build_step_map": [
+    "_flatten"
+  ],
+  "stage_a.node_planner:_flatten": [
+    "_flatten"
+  ],
+  "stage_a.node_planner:_collect_leaf_steps": [
+    "append",
+    "get"
+  ],
+  "stage_a.node_planner:_infer_node_type": [
+    "any",
+    "get",
+    "_has_matching_tool",
+    "startswith",
+    "lower",
+    "len",
+    "match_pseudo_type"
+  ],
+  "stage_a.node_planner:_has_matching_tool": [
+    "findall",
+    "search_tools"
+  ],
+  "stage_a.node_planner:_make_node_id": [
+    "lower",
+    "replace",
+    "strip"
+  ],
+  "stage_a.node_planner:_build_node_specs": [
+    "_infer_node_type",
+    "append",
+    "_make_node_id",
+    "NodeSpec"
+  ],
+  "stage_a.node_planner:_validate_human_input_branches": [
+    "append",
+    "join",
+    "get",
+    "ValueError"
+  ],
+  "stage_a.node_planner:_build_edges": [
+    "set",
+    "update",
+    "_analyze_branches",
+    "len",
+    "EdgeSpec",
+    "_add_branch_edge",
+    "_find_next_main_node",
+    "values",
+    "append",
+    "enumerate"
+  ],
+  "stage_a.node_planner:_analyze_branches": [
+    "get",
+    "_collect_branch_step_ids",
+    "_extract_step_id_from_text",
+    "index",
+    "sub",
+    "len",
+    "_find_idx"
+  ],
+  "stage_a.node_planner:_collect_branch_step_ids": [
+    "extend",
+    "append",
+    "_collect_branch_step_ids"
+  ],
+  "stage_a.node_planner:_add_branch_edge": [
+    "EdgeSpec",
+    "index",
+    "values",
+    "append",
+    "len"
+  ],
+  "stage_a.node_planner:_find_next_main_node": [
+    "range",
+    "len"
+  ],
+  "stage_a.node_planner:_extract_step_id_from_text": [
+    "match",
+    "group",
+    "strip"
+  ],
+  "stage_a.node_planner:_extract_fields_llm": [
+    "loads",
+    "next",
+    "extract_phase_output",
+    "join",
+    "complete",
+    "build_user_prompt",
+    "append"
+  ],
+  "stage_a.node_planner:_apply_fields": [
+    "get",
+    "FieldSpec"
+  ],
+  "stage_a.rule_decomposer:decompose_by_rules": [
+    "_make_workflow_id",
+    "WorkflowEntry",
+    "_estimate_node_count",
+    "append",
+    "DecompositionPlan",
+    "_classify_step"
+  ],
+  "stage_a.rule_decomposer:_classify_step": [
+    "append",
+    "_classify_step"
+  ],
+  "stage_a.rule_decomposer:_estimate_node_count": [
+    "sum"
+  ],
+  "stage_a.rule_decomposer:_make_workflow_id": [
+    "strip",
+    "sub"
+  ],
+  "stage_a.spec_generator:generate_design_specs": [
+    "get",
+    "_flatten_steps",
+    "join",
+    "complete",
+    "_build_node_plan_text",
+    "_build_steps_text",
+    "build_user_prompt",
+    "append"
+  ],
+  "stage_a.spec_generator:_build_node_plan_text": [
+    "append",
+    "join"
+  ],
+  "stage_a.spec_generator:_flatten_steps": [
+    "_flatten_steps"
+  ],
+  "stage_a.spec_generator:_build_steps_text": [
+    "append",
+    "join",
+    "get"
+  ],
+  "stage_a.validator:validate_decomposition": [
+    "any",
+    "set",
+    "keys",
+    "sorted",
+    "startswith",
+    "_collect_step_ids",
+    "extend",
+    "append",
+    "_check_dag_cycles"
+  ],
+  "stage_a.validator:_collect_step_ids": [
+    "_collect_step_ids",
+    "add"
+  ],
+  "stage_a.validator:_check_dag_cycles": [
+    "get",
+    "items",
+    "pop",
+    "append",
+    "len"
+  ],
+  "supervisor:run_supervisor_once": [
+    "release",
+    "_run_cycle",
+    "acquire"
+  ],
+  "supervisor:_run_cycle": [
+    "exists",
+    "execute",
+    "error",
+    "triage",
+    "is_dir",
+    "alert_file_to_event",
+    "exception",
+    "info",
+    "heartbeat_scan",
+    "rename",
+    "extend",
+    "append",
+    "iterdir",
+    "ActionExecutor",
+    "len"
+  ],
+  "supervisor:run_supervisor": [
+    "run_supervisor_once",
+    "_start_watchdog",
+    "stop",
+    "join",
+    "info",
+    "SupervisorConfig",
+    "basicConfig",
+    "sleep"
+  ],
+  "supervisor:_start_watchdog": [
+    "str",
+    "run_supervisor_once",
+    "Observer",
+    "mkdir",
+    "start",
+    "warning",
+    "exception",
+    "AlertHandler",
+    "info",
+    "schedule",
+    "Path"
+  ],
+  "supervisor.__main__:main": [
+    "add_argument",
+    "create_client",
+    "run_supervisor",
+    "ArgumentParser",
+    "parse_args",
+    "print",
+    "SupervisorConfig",
+    "Path"
+  ],
+  "supervisor.actions:ActionExecutor.__init__": [
+    "Path"
+  ],
+  "supervisor.actions:ActionExecutor.execute": [
+    "_dispatch",
+    "_append_log"
+  ],
+  "supervisor.actions:ActionExecutor._dispatch": [
+    "_review_dialogue",
+    "ActionResult",
+    "warning",
+    "_kill_session",
+    "_diagnose",
+    "_retry_stage"
+  ],
+  "supervisor.actions:ActionExecutor._kill_session": [
+    "exists",
+    "get",
+    "loads",
+    "ActionResult",
+    "write_text",
+    "dumps",
+    "_write_message",
+    "read_text"
+  ],
+  "supervisor.actions:ActionExecutor._retry_stage": [
+    "ActionResult",
+    "_do_retry",
+    "_write_message"
+  ],
+  "supervisor.actions:ActionExecutor._do_retry": [
+    "warning",
+    "warn"
+  ],
+  "supervisor.actions:ActionExecutor._diagnose": [
+    "str",
+    "error",
+    "get",
+    "_gather_context",
+    "ActionResult",
+    "complete",
+    "dumps",
+    "_write_message"
+  ],
+  "supervisor.actions:ActionExecutor._review_dialogue": [
+    "str",
+    "exists",
+    "error",
+    "get",
+    "startswith",
+    "ActionRequest",
+    "ActionResult",
+    "complete",
+    "_kill_session",
+    "_append_log",
+    "_write_message",
+    "read_text",
+    "strip"
+  ],
+  "supervisor.actions:ActionExecutor._gather_context": [
+    "read_text",
+    "exists",
+    "join",
+    "append"
+  ],
+  "supervisor.actions:ActionExecutor._write_message": [
+    "mkdir",
+    "SupervisorMessage",
+    "write_text",
+    "dumps",
+    "model_dump"
+  ],
+  "supervisor.actions:ActionExecutor._append_log": [
+    "exists",
+    "loads",
+    "mkdir",
+    "write_text",
+    "dumps",
+    "SupervisorLogEntry",
+    "model_dump",
+    "read_text",
+    "append"
+  ],
+  "supervisor.alert:write_alert": [
+    "isoformat",
+    "write_text",
+    "now",
+    "dumps"
+  ],
+  "supervisor.triage:triage": [
+    "ActionRequest",
+    "get"
+  ],
+  "supervisor.watcher:heartbeat_scan": [
+    "exists",
+    "any",
+    "get",
+    "total_seconds",
+    "loads",
+    "is_dir",
+    "now",
+    "int",
+    "SessionEvent",
+    "len",
+    "match",
+    "read_text",
+    "append",
+    "iterdir",
+    "fromisoformat"
+  ],
+  "supervisor.watcher:alert_file_to_event": [
+    "read_text",
+    "model_validate",
+    "loads",
+    "SessionEvent"
+  ],
+  "tool_catalog:load_catalog": [
+    "open",
+    "Path",
+    "model_validate",
+    "safe_load"
+  ],
+  "tool_catalog:lookup_tool": [
+    "values",
+    "load_catalog"
+  ],
+  "tool_catalog:search_tools": [
+    "set",
+    "sort",
+    "load_catalog",
+    "join",
+    "lower",
+    "values",
+    "append"
+  ],
+  "tool_catalog:validate_tool_config": [
+    "set",
+    "get",
+    "keys",
+    "sorted",
+    "load_catalog",
+    "join",
+    "lookup_tool",
+    "append"
+  ],
+  "validator:validate_workflow": [
+    "str",
+    "get",
+    "extract_runtime_errors",
+    "_persist",
+    "repair_runtime_errors",
+    "on_status",
+    "join",
+    "_emit",
+    "ValidationResult",
+    "delete_app",
+    "import_and_run",
+    "range",
+    "info",
+    "read_text",
+    "append",
+    "_build_diagnostics",
+    "ValidationRound",
+    "generate_test_inputs"
+  ],
+  "validator:_build_diagnostics": [
+    "append",
+    "join"
+  ],
+  "validator:_persist": [
+    "model_dump",
+    "mkdir",
+    "write_text",
+    "dumps"
+  ],
+  "validator.runner:import_and_run": [
+    "str",
+    "get",
+    "import_dsl",
+    "warning",
+    "run_workflow"
+  ],
+  "validator.runner:extract_runtime_errors": [
+    "append",
+    "get"
+  ],
+  "validator.runtime_repair:_build_repair_prompt": [
+    "format",
+    "join"
+  ],
+  "validator.runtime_repair:repair_runtime_errors": [
+    "extract_yaml_block",
+    "isinstance",
+    "safe_load",
+    "complete",
+    "warning",
+    "_build_repair_prompt"
+  ],
+  "validator.test_inputs:generate_test_inputs": [
+    "safe_load",
+    "get",
+    "isinstance"
+  ],
+  "workflow_editor.compiler:parse_wds_fragment": [
+    "get",
+    "isinstance",
+    "safe_load",
+    "_validate_node_fields",
+    "join",
+    "enumerate",
+    "model_validate",
+    "extend",
+    "append",
+    "ValueError"
+  ],
+  "workflow_editor.compiler:compile_fragment": [
+    "str",
+    "get",
+    "mapper",
+    "compile_single_edge",
+    "int",
+    "CompileResult",
+    "WorkflowIR",
+    "NodeType",
+    "time",
+    "_infer_outputs",
+    "compile_single_node",
+    "IRMetadata",
+    "_resolve_node_type_str",
+    "IRNode",
+    "append",
+    "enumerate"
+  ],
+  "workflow_editor.compiler:_resolve_node_type_str": [
+    "get"
+  ],
+  "workflow_editor.compiler:_infer_dsl_outputs": [
+    "get",
+    "keys",
+    "isinstance",
+    "join",
+    "extend"
+  ],
+  "workflow_editor.compiler:build_node_context": [
+    "_infer_dsl_outputs",
+    "append",
+    "join",
+    "get"
+  ],
+  "workflow_editor.dialogue:_estimate_positions": [
+    "range",
+    "append",
+    "get"
+  ],
+  "workflow_editor.dialogue:_extract_json_block": [
+    "search",
+    "group",
+    "loads"
+  ],
+  "workflow_editor.dialogue:_extract_json_field": [
+    "str",
+    "get",
+    "_extract_json_block"
+  ],
+  "workflow_editor.dialogue:EditorDialogue.receive_file": [
+    "import_and_fetch",
+    "str",
+    "warning",
+    "_get_ai_assessment",
+    "render_skeleton",
+    "FileReceiveResult"
+  ],
+  "workflow_editor.dialogue:EditorDialogue._get_ai_assessment": [
+    "format",
+    "converse",
+    "warning"
+  ],
+  "workflow_editor.dialogue:EditorDialogue.respond": [
+    "append",
+    "_respond_p2",
+    "DialogueTurn",
+    "_respond_p3"
+  ],
+  "workflow_editor.dialogue:EditorDialogue._respond_p2": [
+    "_extract_json_field",
+    "list",
+    "converse",
+    "DialogueTurn",
+    "append"
+  ],
+  "workflow_editor.dialogue:EditorDialogue._respond_p3": [
+    "get",
+    "_extract_json_block",
+    "list",
+    "converse",
+    "check_continuity",
+    "format",
+    "DialogueTurn",
+    "append"
+  ],
+  "workflow_editor.dialogue:EditorDialogue.get_modified_dsl": [
+    "RuntimeError",
+    "export_dsl"
+  ],
+  "workflow_editor.dialogue:EditorDialogue.execute_p4": [
+    "deepcopy",
+    "converse",
+    "format",
+    "compile_fragment",
+    "extend_node",
+    "enumerate",
+    "get",
+    "_estimate_positions",
+    "P4Result",
+    "export_dsl",
+    "commit",
+    "list",
+    "_resolve_anchor_id",
+    "range",
+    "build_node_context",
+    "replace_subgraph",
+    "len",
+    "_extract_yaml_block",
+    "join",
+    "parse_wds_fragment",
+    "append"
+  ],
+  "workflow_editor.dialogue:EditorDialogue._extract_yaml_block": [
+    "search",
+    "group"
+  ],
+  "workflow_editor.dialogue:EditorDialogue._resolve_anchor_id": [
+    "warning",
+    "get",
+    "len"
+  ],
+  "workflow_editor.graph_surgery:check_continuity": [
+    "set",
+    "add",
+    "get",
+    "list",
+    "pop",
+    "append",
+    "len"
+  ],
+  "workflow_editor.graph_surgery:SurgeryContext.node_count": [
+    "len"
+  ],
+  "workflow_editor.graph_surgery:SurgeryContext.edge_count": [
+    "len"
+  ],
+  "workflow_editor.graph_surgery:SurgeryContext.get_node_by_id": [
+    "get"
+  ],
+  "workflow_editor.graph_surgery:GraphSurgeon.import_and_fetch": [
+    "get",
+    "get_draft",
+    "SurgeryContext",
+    "import_dsl",
+    "ValueError"
+  ],
+  "workflow_editor.graph_surgery:GraphSurgeon.commit": [
+    "update_draft",
+    "get"
+  ],
+  "workflow_editor.graph_surgery:GraphSurgeon.export_dsl": [
+    "export_dsl"
+  ],
+  "workflow_editor.graph_surgery:GraphSurgeon.try_run": [
+    "run_workflow"
+  ],
+  "workflow_editor.graph_surgery:GraphSurgeon.cleanup": [
+    "delete_app"
+  ],
+  "workflow_editor.graph_surgery:GraphSurgeon.replace_subgraph": [
+    "extend",
+    "append",
+    "set",
+    "deepcopy"
+  ],
+  "workflow_editor.graph_surgery:GraphSurgeon.extend_node": [
+    "extend"
+  ],
+  "workflow_editor.skeleton_renderer:render_skeleton": [
+    "str",
+    "set",
+    "get",
+    "keys",
+    "sorted",
+    "add",
+    "list",
+    "items",
+    "join",
+    "popleft",
+    "NodeInfo",
+    "deque",
+    "append",
+    "enumerate"
+  ]
+}
